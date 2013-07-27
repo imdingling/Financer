@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Financer
 {
-    public class HistorySource : UITableViewDataSource
+    public class HistorySource : UITableViewSource
     {
         private Dictionary<DateTime, Transaction[]> transactions;
 
@@ -44,7 +44,7 @@ namespace Financer
             }
       
             var transaction = transactions.ElementAt (indexPath.Section).Value [indexPath.Row];
-            cell.PopulateCell (transaction);
+            cell.UpdateCell (transaction);
       
             return cell;
         }

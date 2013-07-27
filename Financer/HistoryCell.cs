@@ -10,11 +10,15 @@ namespace Financer
     {
         public static readonly NSString Key = new NSString ("HistoryCell");
 
-        public HistoryCell () : base (UITableViewCellStyle.Default, Key)
+        public HistoryCell () : base ()
         {
         }
 
-        public void PopulateCell(Transaction transaction)
+        public HistoryCell(IntPtr handle) : base(handle)
+        {
+        }
+
+        public void UpdateCell(Transaction transaction)
         {
             if (transaction == null) {
                 return;
@@ -23,7 +27,8 @@ namespace Financer
             this.DirectionImage.Image = GetDirectionImage(transaction);
             this.DescriptionLabel.Text = transaction.Description;
             this.AmountLabel.Text = transaction.Amount.ToString ("C");
-            this.DetailsLabel.Text = transaction.Receiver.ToString ();
+            this.AmountLabel.TextColor = GetAmountColor (transaction);
+            this.DetailsLabel.Text = GetDetailsString (transaction);
         }
 
         private static UIImage GetDirectionImage(Transaction transaction)
@@ -38,6 +43,11 @@ namespace Financer
             } else {
                 return transaction.Receiver.ToString ();
             }
+        }
+
+        private static UIColor GetAmountColor(Transaction transaction)
+        {
+            return transaction.IsInbound ? UIColor.Green : UIColor.Red;
         }
     }
 }

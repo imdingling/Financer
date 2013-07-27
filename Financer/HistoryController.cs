@@ -5,14 +5,13 @@ using MonoTouch.UIKit;
 
 namespace Financer
 {
-    [Register ("HistoryController")]
-    public class HistoryController : UITableViewController
+    public partial class HistoryController : UITableViewController
     {
-        public HistoryController () : base (UITableViewStyle.Plain)
+        public HistoryController ()
         {
         }
 
-        public HistoryController (IntPtr handler)
+        public HistoryController (IntPtr handle) : base (handle)
         {
         }
 
@@ -24,14 +23,14 @@ namespace Financer
         public override void ViewDidLoad ()
         {
             base.ViewDidLoad ();
-            if (this.TableView.DataSource == null) {
-                this.TableView.DataSource = new HistorySource (App.Transactions);
+            if (this.TableView != null && this.TableView.Source == null) {
+                this.TableView.Source = new HistorySource (App.Transactions);
             }
         }
 
-        [Action ("AddNewTransaction:")]
-        public void AddNewTransaction (UIBarButtonItem sender)
+        public override void ViewDidAppear (bool animated)
         {
+            base.ViewDidAppear (animated);
         }
     }
 }
