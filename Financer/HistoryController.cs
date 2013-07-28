@@ -24,7 +24,7 @@ namespace Financer
 
         private void Initialize()
         {
-            this.FilteredTransactions = GetTransactionDictionary (App.Transactions);
+            this.FilteredTransactions = GetTransactionDictionary (FinancerModel.GetTransactions());
             this.lazySearchTimer = new LazyInvoker (0.5, this.Search);
         }
 
@@ -43,7 +43,9 @@ namespace Financer
             this.TableView.Scrolled += this.TableViewScrolled;
 
             this.historySearchBar.TextChanged += this.HandleSearchBarTextChanged;
-            this.TableView.ScrollToRow (NSIndexPath.FromItemSection (0, 0), UITableViewScrollPosition.Top, false);
+            if (FinancerModel.GetTransactions().Any ()) {
+                this.TableView.ScrollToRow (NSIndexPath.FromItemSection (0, 0), UITableViewScrollPosition.Top, false);
+            }
         }
 
         private void TableViewScrolled (object sender, EventArgs e)
@@ -58,7 +60,7 @@ namespace Financer
 
         private void Search()
         {
-            this.FilteredTransactions = GetTransactionDictionary (App.Transactions.Where (transaction => transaction.ContainsSearchWord (this.historySearchBar.Text)));
+            this.FilteredTransactions = GetTransactionDictionary (FinancerModel.GetTransactions().Where (transaction => transaction.ContainsSearchWord (this.historySearchBar.Text)));
             this.TableView.ReloadData ();
         }
 

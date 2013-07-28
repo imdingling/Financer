@@ -8,71 +8,93 @@ namespace Financer
     {
         public static void Initialize ()
         {
-            CurrentUser = new Person("Current", "Currentov");
-            Transactions = GetDummyTransactions ();
+            InitDummyTransactions ();
+            CurrentUser = FinancerModel.GetPeople ().First ();
         }
 
         public static Person CurrentUser { get; private set; }
 
-        public static IEnumerable<Transaction> Transactions { get; private set; }
-
-        private static IEnumerable<Transaction> GetDummyTransactions ()
+        private static void InitDummyTransactions()
         {
-            return new Transaction[] {
-                GenerateTransaction("fadsfasdf"),
-                GenerateTransaction("ffadsfasd"),
-                GenerateTransaction("safdsafas"),
-                GenerateTransaction("agsdagsag"),
-                GenerateTransaction("asdagsadgsaaaa"),
-                GenerateTransaction("agdsagsadgaaa"),
-                GenerateTransaction("gsdagsdagasgas"),
-                GenerateTransaction("cscasdf"),
-                GenerateTransaction("aaaa"),
-                GenerateTransaction("acdhdshsdaaa"),
-                GenerateTransaction("ahgfjdfgaaa"),
-                GenerateTransaction("aatryrtyrtaa"),
-                GenerateTransaction("aautrurjfgtyraa"),
-                GenerateTransaction("aawwerraa"),
-                GenerateTransaction("aaawerwqra"),
-                GenerateTransaction("aaaa"),
-                GenerateTransaction("aaarewqrqwa"),
-                GenerateTransaction("areqrqaaa"),
-            }.OrderByDescending (transaction => transaction.Date)
-             .ToArray ();
+            if (!FinancerModel.GetTransactions ().Any ()) {
+                InsertDummyPeople ();
+                InsertDummyCategories ();
+                InsertDummyTransactions ();
+            }
         }
 
-        private static Person[] People = new Person[] {
-            new Person("Pesho", "Peshev"), 
-            new Person("Niki", "Nikov"), 
-            new Person("Penka", "Penkova"), 
-            new Person("Tosho", "Toshev"), 
-        };
+        private static void InsertDummyPeople()
+        {
+            FinancerModel.AddPerson (new Person("Current", "Currentov"));
+            FinancerModel.AddPerson (new Person ("Pesho", "Peshev"));
+            FinancerModel.AddPerson (new Person("Niki", "Nikov"));
+            FinancerModel.AddPerson (new Person("Penka", "Penkova"));
+            FinancerModel.AddPerson (new Person("Tosho", "Toshev"));
+        }
+
+        private static void InsertDummyCategories()
+        {
+            FinancerModel.AddCategory (new Category ("Category 1"));
+            FinancerModel.AddCategory (new Category ("Category 2"));
+            FinancerModel.AddCategory (new Category ("Category 3"));
+        }
+
+        private static void InsertDummyTransactions ()
+        {
+            GenerateTransaction ("fadsfasdf");
+            GenerateTransaction ("ffadsfasd");
+            GenerateTransaction ("safdsafas");
+            GenerateTransaction ("agsdagsag");
+            GenerateTransaction ("asdagsadgsaaaa");
+            GenerateTransaction ("agdsagsadgaaa");
+            GenerateTransaction ("gsdagsdagasgas");
+            GenerateTransaction ("cscasdf");
+            GenerateTransaction ("aaaa");
+            GenerateTransaction ("acdhdshsdaaa");
+            GenerateTransaction ("ahgfjdfgaaa");
+            GenerateTransaction ("aatryrtyrtaa");
+            GenerateTransaction ("aautrurjfgtyraa");
+            GenerateTransaction ("aawwerraa");
+            GenerateTransaction ("aaawerwqra");
+            GenerateTransaction ("aaaa");
+            GenerateTransaction ("aaarewqrqwa");
+            GenerateTransaction ("areqrqaaa");
+        }
+
         private static Random random = new Random ();
 
-        private static Transaction GenerateTransaction (string description)
+        private static void GenerateTransaction (string description)
         {
             var amount = random.NextDouble () * 1000;
 
-            var user2 = People [random.Next (People.Length)];
+            var categoryId = FinancerModel.GetCategories ().ElementAt (random.Next (FinancerModel.GetCategories ().Count ())).Id;
 
-            Person sender;
-            Person receiver;
+            var user1Id = FinancerModel.GetPeople ().First ().Id;
+            var user2Id = FinancerModel.GetPeople().ElementAt(random.Next (1, FinancerModel.GetPeople().Count() - 1)).Id;
+
+            int senderId;
+            int receiverId;
             if (random.Next (2) == 0) {
-                sender = CurrentUser;
-                receiver = user2;
+                senderId = user1Id;
+                receiverId = user2Id;
             } else {
-                sender = user2;
-                receiver = CurrentUser;
+                senderId = user2Id;
+                receiverId = user1Id;
             }
 
-            return new Transaction () {
-                Reason = new TransactionType("Sample transaction"),
+            var transId = FinancerModel.AddTransaction (new Transaction () {
+                CategoryId = categoryId,
                 Amount = amount,
                 Date = DateTime.Today.AddDays(random.Next(-5, 5)),
                 Description = description,
-                Receiver = receiver,
-                Senders = new Dictionary<Person, double>() { { sender, 1 } }
-            };
+                ReceiverId = receiverId,
+            });
+
+            FinancerModel.AddTransactionSender (new TransactionSender () {
+                PersonId = senderId,
+                Share = 1,
+                TransactionId = transId
+            });
         }
     }
 }

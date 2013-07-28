@@ -10,7 +10,6 @@ namespace Financer
     {
         static void Main (string[] args)
         {
-            App.Initialize ();
             UIApplication.Main (args, null, "AppDelegate");
         }
     }

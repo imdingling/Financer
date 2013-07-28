@@ -1,16 +1,25 @@
 using System;
+using SQLite;
 
 namespace Financer
 {
     public class Person
     {
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
     
         public Person(string firstName, string lastName)
         {
             this.FirstName = firstName;
             this.LastName = lastName;
+        }
+
+        public Person()
+        {
         }
 
         public override bool Equals (object obj)
