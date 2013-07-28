@@ -9,26 +9,26 @@ namespace Financer
 {
     public class HistorySource : UITableViewSource
     {
-        private Dictionary<DateTime, Transaction[]> transactions;
+        private HistoryController controller;
 
-        public HistorySource (IEnumerable<Transaction> transactions)
+        public HistorySource (HistoryController controller)
         {
-            this.transactions = transactions.GroupBy (transaction => transaction.Date.Date).ToDictionary (gr => gr.Key, gr => gr.ToArray());
+            this.controller = controller;
         }
 
         public override int NumberOfSections (UITableView tableView)
         {
-            return transactions.Keys.Count;
+            return this.controller.FilteredTransactions.Keys.Count;
         }
 
         public override int RowsInSection (UITableView tableview, int section)
         {
-            return transactions.ElementAt(section).Value.Length;
+            return this.controller.FilteredTransactions.ElementAt(section).Value.Length;
         }
 
         public override string TitleForHeader (UITableView tableView, int section)
         {
-            return transactions.ElementAt (section).Key.ToString ("d");
+            return this.controller.FilteredTransactions.ElementAt (section).Key.ToString ("d");
         }
 
         public override string TitleForFooter (UITableView tableView, int section)
@@ -43,7 +43,7 @@ namespace Financer
                 cell = new HistoryCell ();
             }
       
-            var transaction = transactions.ElementAt (indexPath.Section).Value [indexPath.Row];
+            var transaction = this.controller.FilteredTransactions.ElementAt (indexPath.Section).Value [indexPath.Row];
             cell.UpdateCell (transaction);
       
             return cell;

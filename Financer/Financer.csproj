@@ -103,6 +103,8 @@
     <Compile Include="HistoryController.designer.cs">
       <DependentUpon>HistoryController.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="LazyInvoker.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="MainStoryboard_iPhone.storyboard" />

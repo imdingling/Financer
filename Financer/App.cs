@@ -68,7 +68,7 @@ namespace Financer
             return new Transaction () {
                 Reason = new TransactionType("Sample transaction"),
                 Amount = amount,
-                Date = DateTime.Today.AddDays(random.Next(-10, 10)),
+                Date = DateTime.Today.AddDays(random.Next(-5, 5)),
                 Description = description,
                 Receiver = receiver,
                 Senders = new Dictionary<Person, double>() { { sender, 1 } }

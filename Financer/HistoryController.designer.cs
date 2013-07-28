@@ -12,8 +12,15 @@ namespace Financer
 	[Register ("HistoryController")]
 	partial class HistoryController
 	{
+		[Outlet]
+		MonoTouch.UIKit.UISearchBar historySearchBar { get; set; }
+		
 		void ReleaseDesignerOutlets ()
 		{
+			if (historySearchBar != null) {
+				historySearchBar.Dispose ();
+				historySearchBar = null;
+			}
 		}
 	}
 }

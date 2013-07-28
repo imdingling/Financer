@@ -29,6 +29,31 @@ namespace Financer
                 return App.CurrentUser.Equals (this.Receiver);
             }
         }
+
+        public bool ContainsSearchWord(string value)
+        {
+            if (string.IsNullOrEmpty (value)) {
+                return true;
+            }
+
+            var firstChar = value [0];
+            if (firstChar.In('<', '>', '=')) {
+                double doubleValue;
+                if (double.TryParse (value.Substring (1), out doubleValue)) {
+                    switch (firstChar) {
+                        case '<': return this.Amount < doubleValue;
+                        case '>': return this.Amount > doubleValue;
+                        case '=': return Math.Abs(this.Amount - doubleValue) < 0.5;
+                    }
+                } else {
+                    return value.Length == 1;
+                }
+            }
+
+            return this.Description.Contains (value, StringComparison.OrdinalIgnoreCase) ||
+                this.Reason.Description.Contains (value, StringComparison.OrdinalIgnoreCase) ||
+                (this.IsInbound ? this.SendersString.ToString ().Contains (value, StringComparison.OrdinalIgnoreCase) : this.Receiver.ToString ().Contains (value, StringComparison.OrdinalIgnoreCase));
+        }
     }
 }
 
