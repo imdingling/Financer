@@ -3,6 +3,7 @@ using MonoTouch.Foundation;
 
 namespace Financer
 {
+    // Refactor sometime :)
     public class LazyInvoker
     {
         private NSTimer timer;
