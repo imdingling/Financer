@@ -6,15 +6,15 @@ using System.Linq;
 
 namespace Financer
 {
-    public partial class HistoryCell : UITableViewCell
+    public partial class TransactionsCell : UITableViewCell
     {
-        public static readonly NSString Key = new NSString ("HistoryCell");
+        public static readonly NSString Key = new NSString ("TransactionsCell");
 
-        public HistoryCell () : base ()
+        public TransactionsCell () : base ()
         {
         }
 
-        public HistoryCell(IntPtr handle) : base(handle)
+        public TransactionsCell(IntPtr handle) : base(handle)
         {
         }
 
@@ -26,7 +26,7 @@ namespace Financer
 
             this.DirectionImage.Image = GetDirectionImage(transaction);
             this.DescriptionLabel.Text = transaction.Description;
-            this.AmountLabel.Text = transaction.Amount.ToString ("C");
+            this.AmountLabel.Text = transaction.Amount.ToString ("0.00") + " лв.";
             this.AmountLabel.TextColor = GetAmountColor (transaction);
             this.DetailsLabel.Text = GetDetailsString (transaction);
         }
@@ -39,7 +39,7 @@ namespace Financer
         private static string GetDetailsString(Transaction transaction)
         {
             if (transaction.IsInbound) {
-                return transaction.SendersString;
+                return transaction.Sender.ToString();
             } else {
                 return transaction.Receiver.ToString ();
             }
@@ -47,7 +47,7 @@ namespace Financer
 
         private static UIColor GetAmountColor(Transaction transaction)
         {
-            return transaction.IsInbound ? UIColor.Green : UIColor.Red;
+            return transaction.IsInbound ? Sys.GreenColor : Sys.RedColor;
         }
     }
 }

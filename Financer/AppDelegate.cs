@@ -15,11 +15,6 @@ namespace Financer
 
         public override bool FinishedLaunching (UIApplication application, NSDictionary launchOptions)
         {
-            FinancerModel.DB.CreateTable<Person> (CreateFlags.None);
-            FinancerModel.DB.CreateTable<Category> (CreateFlags.None);
-            FinancerModel.DB.CreateTable<Transaction> (CreateFlags.None);
-            FinancerModel.DB.CreateTable<TransactionSender> (CreateFlags.None);
-
             App.Initialize ();
             return true;
         }

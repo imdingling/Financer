@@ -8,35 +8,33 @@ namespace Financer
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        public string FirstName { get; set; }
+        public string Name { get; set; }
 
-        public string LastName { get; set; }
+        public bool IsCurrentUser { get; set; }
     
-        public Person(string firstName, string lastName)
+        public Person(string name)
         {
-            this.FirstName = firstName;
-            this.LastName = lastName;
+            this.Name = name;
         }
 
         public Person()
         {
         }
 
-        public override bool Equals (object obj)
-        {
-            var person = obj as Person;
-            if (person != null) {
-                return person.FirstName.Equals (this.FirstName, StringComparison.OrdinalIgnoreCase) &&
-                       person.LastName.Equals (this.LastName, StringComparison.OrdinalIgnoreCase);
-            }
-      
-            return false;
-        }
-
         public override string ToString ()
         {
-            return string.Format ("{0} {1}", this.FirstName, this.LastName);
+            return this.Name;
         }
+
+        public bool ContainsSearchWord(string value)
+        {
+            if (string.IsNullOrEmpty (value)) {
+                return true;
+            }
+
+            return this.Name.Contains (value, StringComparison.OrdinalIgnoreCase);
+        }
+
     }
 }
 

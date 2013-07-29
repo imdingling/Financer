@@ -9,7 +9,7 @@ namespace Financer
         public static void Initialize ()
         {
             InitDummyTransactions ();
-            CurrentUser = FinancerModel.GetPeople ().First ();
+            CurrentUser = FinancerModel.GetCurrentUser();
         }
 
         public static Person CurrentUser { get; private set; }
@@ -25,75 +25,60 @@ namespace Financer
 
         private static void InsertDummyPeople()
         {
-            FinancerModel.AddPerson (new Person("Current", "Currentov"));
-            FinancerModel.AddPerson (new Person ("Pesho", "Peshev"));
-            FinancerModel.AddPerson (new Person("Niki", "Nikov"));
-            FinancerModel.AddPerson (new Person("Penka", "Penkova"));
-            FinancerModel.AddPerson (new Person("Tosho", "Toshev"));
+            FinancerModel.AddPerson (new Person("Nikola Irinchev") { IsCurrentUser = true });
+            FinancerModel.AddPerson (new Person ("Telerik"));
+            FinancerModel.AddPerson (new Person("Mrusnoto"));
+            FinancerModel.AddPerson (new Person("Elena Kufova"));
+            FinancerModel.AddPerson (new Person("Telerik Cafeteria"));
         }
 
         private static void InsertDummyCategories()
         {
-            FinancerModel.AddCategory (new Category ("Category 1"));
-            FinancerModel.AddCategory (new Category ("Category 2"));
-            FinancerModel.AddCategory (new Category ("Category 3"));
+            FinancerModel.AddCategory (new Category ("Заплата", ""));
+            FinancerModel.AddCategory (new Category ("Наем", ""));
+            FinancerModel.AddCategory (new Category ("Храна", ""));
         }
 
         private static void InsertDummyTransactions ()
         {
-            GenerateTransaction ("fadsfasdf");
-            GenerateTransaction ("ffadsfasd");
-            GenerateTransaction ("safdsafas");
-            GenerateTransaction ("agsdagsag");
-            GenerateTransaction ("asdagsadgsaaaa");
-            GenerateTransaction ("agdsagsadgaaa");
-            GenerateTransaction ("gsdagsdagasgas");
-            GenerateTransaction ("cscasdf");
-            GenerateTransaction ("aaaa");
-            GenerateTransaction ("acdhdshsdaaa");
-            GenerateTransaction ("ahgfjdfgaaa");
-            GenerateTransaction ("aatryrtyrtaa");
-            GenerateTransaction ("aautrurjfgtyraa");
-            GenerateTransaction ("aawwerraa");
-            GenerateTransaction ("aaawerwqra");
-            GenerateTransaction ("aaaa");
-            GenerateTransaction ("aaarewqrqwa");
-            GenerateTransaction ("areqrqaaa");
+            GenerateTransaction ("Заплата за Юни", 2, 1, 1, 2000, new DateTime(2013, 06, 01));
+            GenerateTransaction ("Заплата за Юли", 2, 1, 1, 2000, new DateTime(2013, 07, 01));
+            GenerateTransaction ("Обяд", 1,3, 3, 5, new DateTime(2013, 06, 01));
+            GenerateTransaction ("Обяд", 1,3, 3, 5.3, new DateTime(2013, 06, 01));
+            GenerateTransaction ("Обяд", 1,3, 3, 4.6, new DateTime(2013, 06, 02));
+            GenerateTransaction ("Обяд", 1,3, 3, 4.7, new DateTime(2013, 06, 03));
+            GenerateTransaction ("Обяд", 1,3, 3, 5.9, new DateTime(2013, 06, 04));
+            GenerateTransaction ("Обяд", 1,3, 3, 3.5, new DateTime(2013, 06, 05));
+            GenerateTransaction ("Обяд", 1,3, 3, 6.2, new DateTime(2013, 06, 08));
+            GenerateTransaction ("Обяд", 1,3, 3, 3.5, new DateTime(2013, 06, 09));
+            GenerateTransaction ("Обяд", 1,3, 3, 6.2, new DateTime(2013, 06, 10));
+            GenerateTransaction ("Обяд", 1,3, 3, 3.5, new DateTime(2013, 06, 11));
+            GenerateTransaction ("Обяд", 1,3, 3, 6.2, new DateTime(2013, 06, 12));
+            GenerateTransaction ("Обяд", 1,3, 3, 3.5, new DateTime(2013, 06, 15));
+            GenerateTransaction ("Обяд", 1,3, 3, 6.2, new DateTime(2013, 06, 16));
+            GenerateTransaction ("Обяд", 1,3, 3, 3.5, new DateTime(2013, 06, 17));
+            GenerateTransaction ("Обяд", 1,3, 3, 6.2, new DateTime(2013, 06, 18));
+            GenerateTransaction ("Обяд", 1,3, 3, 7.8, new DateTime(2013, 06, 19));
+            GenerateTransaction ("Хапване", 1, 5, 3, 2, new DateTime(2013, 06, 1));
+            GenerateTransaction ("Хапване", 1, 5, 3, 3, new DateTime(2013, 06, 7));
+            GenerateTransaction ("Хапване", 1, 5, 3, 5, new DateTime(2013, 06, 12));
+            GenerateTransaction ("Хапване", 1, 5, 3, 0.5, new DateTime(2013, 06, 13));
+            GenerateTransaction ("Хапване", 1, 5, 3, 2.5, new DateTime(2013, 06, 19));
+            GenerateTransaction ("Хапване", 1, 5, 3, 1.5, new DateTime(2013, 06, 21));
+            GenerateTransaction ("Хапване", 1, 5, 3, 3.5, new DateTime(2013, 06, 24));
+            GenerateTransaction ("Наем за Юни", 1, 4, 2, 600, new DateTime(2013, 06, 01));
+            GenerateTransaction ("Наем за Юли", 1, 4, 2, 600, new DateTime(2013, 07, 01));
         }
 
-        private static Random random = new Random ();
-
-        private static void GenerateTransaction (string description)
+        private static void GenerateTransaction (string description, int senderId, int receiverId, int categoryId, double amount, DateTime date)
         {
-            var amount = random.NextDouble () * 1000;
-
-            var categoryId = FinancerModel.GetCategories ().ElementAt (random.Next (FinancerModel.GetCategories ().Count ())).Id;
-
-            var user1Id = FinancerModel.GetPeople ().First ().Id;
-            var user2Id = FinancerModel.GetPeople().ElementAt(random.Next (1, FinancerModel.GetPeople().Count() - 1)).Id;
-
-            int senderId;
-            int receiverId;
-            if (random.Next (2) == 0) {
-                senderId = user1Id;
-                receiverId = user2Id;
-            } else {
-                senderId = user2Id;
-                receiverId = user1Id;
-            }
-
-            var transId = FinancerModel.AddTransaction (new Transaction () {
+            FinancerModel.AddTransaction (new Transaction () {
                 CategoryId = categoryId,
                 Amount = amount,
-                Date = DateTime.Today.AddDays(random.Next(-5, 5)),
+                Date = date,
                 Description = description,
                 ReceiverId = receiverId,
-            });
-
-            FinancerModel.AddTransactionSender (new TransactionSender () {
-                PersonId = senderId,
-                Share = 1,
-                TransactionId = transId
+                SenderId = senderId
             });
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using SQLite;
 using System.IO;
@@ -11,7 +12,12 @@ namespace Financer
     {
         public static readonly SQLiteConnection DB = new SQLiteConnection (Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "financer.db"));
 
-        public static IEnumerable<Person> GetPeople()
+        public static IEnumerable<Person> GetOtherPeople()
+        {
+            return DB.Table<Person> ().Where(p => p.IsCurrentUser == false);
+        }
+
+        public static IEnumerable<Person> GetAllPeople()
         {
             return DB.Table<Person> ();
         }
@@ -26,9 +32,9 @@ namespace Financer
             return DB.Table<Category> ();
         }
 
-        public static IEnumerable<TransactionSender> GetTransactionSenders()
+        public static Person GetCurrentUser()
         {
-            return DB.Table<TransactionSender> ();
+            return DB.Table<Person> ().FirstOrDefault (p => p.IsCurrentUser);
         }
 
         public static int AddPerson(Person person)
@@ -46,9 +52,15 @@ namespace Financer
             return DB.Insert (category);
         }
 
-        public static int AddTransactionSender(TransactionSender sender)
+        public static double GetBalance(Person person)
         {
-            return DB.Insert (sender);
+            return GetTransactions().Where (trans => trans.SenderId == person.Id).Sum (trans => trans.Amount) - 
+                   GetTransactions().Where (trans => trans.ReceiverId == person.Id).Sum (trans => trans.Amount);
+        }
+
+        public static double GetBalance(Category category)
+        {
+            return GetTransactions ().Where (trans => trans.CategoryId == category.Id).Sum (trans => (trans.IsInbound ? 1 : -1) * trans.Amount);
         }
     }
 }

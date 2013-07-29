@@ -9,17 +9,25 @@ using System.CodeDom.Compiler;
 
 namespace Financer
 {
-	[Register ("HistoryController")]
-	partial class HistoryController
+    [Register("CategoriesCell")]
+	public partial class CategoriesCell
 	{
 		[Outlet]
-		MonoTouch.UIKit.UISearchBar historySearchBar { get; set; }
+		MonoTouch.UIKit.UILabel AmountLabel { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UILabel CategoryNameLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (historySearchBar != null) {
-				historySearchBar.Dispose ();
-				historySearchBar = null;
+			if (CategoryNameLabel != null) {
+				CategoryNameLabel.Dispose ();
+				CategoryNameLabel = null;
+			}
+
+			if (AmountLabel != null) {
+				AmountLabel.Dispose ();
+				AmountLabel = null;
 			}
 		}
 	}

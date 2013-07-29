@@ -7,17 +7,17 @@ using System.Linq;
 
 namespace Financer
 {
-    public partial class HistoryController : UITableViewController
+    public partial class TransactionsController : UITableViewController
     {
-        public Dictionary<DateTime, Transaction[]> FilteredTransactions;
+        public Dictionary<DateTime, Transaction[]> FilteredTransactions { get; private set; }
         private LazyInvoker lazySearchTimer;
 
-        public HistoryController ()
+        public TransactionsController ()
         {
             this.Initialize();
         }
 
-        public HistoryController (IntPtr handle) : base (handle)
+        public TransactionsController (IntPtr handle) : base (handle)
         {
             this.Initialize();
         }
@@ -36,21 +36,26 @@ namespace Financer
         public override void ViewDidLoad ()
         {
             base.ViewDidLoad ();
-            if (this.TableView != null && this.TableView.Source == null) {
-                this.TableView.Source = new HistorySource (this);
-            }
+            this.TableView.Source = new TransactionsSource (this);
 
             this.TableView.Scrolled += this.TableViewScrolled;
 
-            this.historySearchBar.TextChanged += this.HandleSearchBarTextChanged;
+            this.HistorySearchBar.TextChanged += this.HandleSearchBarTextChanged;
             if (FinancerModel.GetTransactions().Any ()) {
                 this.TableView.ScrollToRow (NSIndexPath.FromItemSection (0, 0), UITableViewScrollPosition.Top, false);
             }
         }
 
+        public override void ViewWillAppear (bool animated)
+        {
+            base.ViewWillAppear (animated);
+            this.TableView.SetContentOffset (new PointF (0, 44), true);
+            this.UpdateFilteredTransactions ();
+        }
+
         private void TableViewScrolled (object sender, EventArgs e)
         {
-            this.historySearchBar.ResignFirstResponder ();
+            this.HistorySearchBar.ResignFirstResponder ();
         }
 
         private void HandleSearchBarTextChanged (object sender, UISearchBarTextChangedEventArgs e)
@@ -60,7 +65,7 @@ namespace Financer
 
         private void Search()
         {
-            this.FilteredTransactions = GetTransactionDictionary (FinancerModel.GetTransactions().Where (transaction => transaction.ContainsSearchWord (this.historySearchBar.Text)));
+            this.UpdateFilteredTransactions ();
             this.TableView.ReloadData ();
         }
 
@@ -69,9 +74,15 @@ namespace Financer
             base.ViewDidAppear (animated);
         }
 
+        private void UpdateFilteredTransactions()
+        {
+            this.FilteredTransactions = GetTransactionDictionary (FinancerModel.GetTransactions().Where (transaction => transaction.ContainsSearchWord (this.HistorySearchBar.Text)));
+            this.TableView.ReloadData ();
+        }
+
         private static Dictionary<DateTime, Transaction[]> GetTransactionDictionary(IEnumerable<Transaction> transactions)
         {
-            return transactions.GroupBy (transaction => transaction.Date.Date).ToDictionary (gr => gr.Key, gr => gr.ToArray());
+            return transactions.GroupBy (transaction => transaction.Date.Date).OrderByDescending(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.ToArray());
         }
     }
 }

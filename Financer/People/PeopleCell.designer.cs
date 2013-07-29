@@ -9,20 +9,17 @@ using System.CodeDom.Compiler;
 
 namespace Financer
 {
-  [Register("HistoryCell")]
-	partial class HistoryCell
+    [Register("PeopleCell")]
+    public partial class PeopleCell
 	{
 		[Outlet]
 		MonoTouch.UIKit.UILabel AmountLabel { get; set; }
 
 		[Outlet]
-		MonoTouch.UIKit.UILabel DescriptionLabel { get; set; }
-
-		[Outlet]
-		MonoTouch.UIKit.UILabel DetailsLabel { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UIImageView DirectionImage { get; set; }
+
+		[Outlet]
+		MonoTouch.UIKit.UILabel NameLabel { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -31,14 +28,9 @@ namespace Financer
 				DirectionImage = null;
 			}
 
-			if (DescriptionLabel != null) {
-				DescriptionLabel.Dispose ();
-				DescriptionLabel = null;
-			}
-
-			if (DetailsLabel != null) {
-				DetailsLabel.Dispose ();
-				DetailsLabel = null;
+			if (NameLabel != null) {
+				NameLabel.Dispose ();
+				NameLabel = null;
 			}
 
 			if (AmountLabel != null) {

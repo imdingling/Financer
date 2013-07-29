@@ -2,33 +2,32 @@ using System;
 using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Financer
 {
-    public class HistorySource : UITableViewSource
+    public class CategoriesSource : UITableViewSource
     {
-        private HistoryController controller;
+        private CategoriesController controller;
 
-        public HistorySource (HistoryController controller)
+        public CategoriesSource (CategoriesController controller)
         {
             this.controller = controller;
         }
 
         public override int NumberOfSections (UITableView tableView)
         {
-            return this.controller.FilteredTransactions.Keys.Count;
+            return controller.FilteredCategories.Keys.Count;
         }
 
         public override int RowsInSection (UITableView tableview, int section)
         {
-            return this.controller.FilteredTransactions.ElementAt(section).Value.Length;
+            return this.controller.FilteredCategories.ElementAt(section).Value.Length;
         }
 
         public override string TitleForHeader (UITableView tableView, int section)
         {
-            return this.controller.FilteredTransactions.ElementAt (section).Key.ToString ("d");
+            return this.controller.FilteredCategories.ElementAt (section).Key.ToString ();
         }
 
         public override string TitleForFooter (UITableView tableView, int section)
@@ -38,14 +37,14 @@ namespace Financer
 
         public override UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath)
         {
-            var cell = tableView.DequeueReusableCell (HistoryCell.Key) as HistoryCell;
+            var cell = tableView.DequeueReusableCell (CategoriesCell.Key) as CategoriesCell;
             if (cell == null) {
-                cell = new HistoryCell ();
+                cell = new CategoriesCell ();
             }
-      
-            var transaction = this.controller.FilteredTransactions.ElementAt (indexPath.Section).Value [indexPath.Row];
-            cell.UpdateCell (transaction);
-      
+
+            var category = this.controller.FilteredCategories.ElementAt (indexPath.Section).Value [indexPath.Row];
+            cell.UpdateCell (category);
+
             return cell;
         }
     }

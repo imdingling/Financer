@@ -14,6 +14,9 @@ namespace Financer
         // ForeignKey
         public int ReceiverId { get; set; }
 
+        // ForeignKey
+        public int SenderId { get; set; }
+
         public double Amount { get; set; }
 
         public string Description { get; set; }
@@ -25,17 +28,14 @@ namespace Financer
 
         public Person Receiver { 
             get {
-                return FinancerModel.GetPeople().FirstOrDefault (p => p.Id == this.ReceiverId);
+                return FinancerModel.GetAllPeople().FirstOrDefault (p => p.Id == this.ReceiverId);
             }
         }
 
-        public Dictionary<Person, double> Senders
+        public Person Sender
         {
             get {
-                return FinancerModel.GetTransactionSenders ()
-                                    .Where (ts => ts.TransactionId == this.Id)
-                                    .ToDictionary (ts => FinancerModel.GetPeople ().First (p => p.Id == ts.PersonId),
-                                                   ts => ts.Share);
+                return FinancerModel.GetAllPeople().FirstOrDefault (p => p.Id == this.SenderId);
             }
         }
 
@@ -45,15 +45,9 @@ namespace Financer
             }
         }
 
-        public string SendersString {
-            get {
-                return string.Join (",", this.Senders.Keys.Select (person => person.ToString ()));
-            }
-        }
-
         public bool IsInbound {
             get {
-                return App.CurrentUser.Equals (this.Receiver);
+                return App.CurrentUser.Id == this.Receiver.Id;
             }
         }
 
@@ -78,8 +72,8 @@ namespace Financer
             }
 
             return this.Description.Contains (value, StringComparison.OrdinalIgnoreCase) ||
-                this.Category.Description.Contains (value, StringComparison.OrdinalIgnoreCase) ||
-                (this.IsInbound ? this.SendersString.ToString ().Contains (value, StringComparison.OrdinalIgnoreCase) : this.Receiver.ToString ().Contains (value, StringComparison.OrdinalIgnoreCase));
+                this.Category.ContainsSearchWord(value) ||
+                (this.IsInbound ? this.Sender.ToString ().Contains (value, StringComparison.OrdinalIgnoreCase) : this.Receiver.ToString ().Contains (value, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
