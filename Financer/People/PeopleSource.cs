@@ -42,7 +42,7 @@ namespace Financer
                 cell = new PeopleCell ();
             }
 
-            var person = this.controller.FilteredPeople.ElementAt (indexPath.Section).Value [indexPath.Row];
+            var person = this.controller.FilteredPeople.PersonForIndexPath(indexPath);
             cell.UpdateCell (person);
 
             return cell;

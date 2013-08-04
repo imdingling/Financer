@@ -46,6 +46,18 @@ namespace Financer
             this.UpdateFilteredPeople ();
         }
 
+        public override void PrepareForSegue (UIStoryboardSegue segue, NSObject sender)
+        {
+            if (segue.Identifier == "Old") {
+                var controller = segue.DestinationViewController as PersonController;
+                if (controller != null) {
+                    controller.Person = this.FilteredPeople.PersonForIndexPath (this.TableView.IndexPathForSelectedRow);
+                }
+            }
+
+            base.PrepareForSegue (segue, sender);
+        }
+
         private void TableViewScrolled (object sender, EventArgs e)
         {
             this.PeopleSearchBar.ResignFirstResponder ();

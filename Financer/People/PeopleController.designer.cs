@@ -13,18 +13,10 @@ namespace Financer
 	partial class PeopleController
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIBarButtonItem AddNewPersonButton { get; set; }
-
-		[Outlet]
 		MonoTouch.UIKit.UISearchBar PeopleSearchBar { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (AddNewPersonButton != null) {
-				AddNewPersonButton.Dispose ();
-				AddNewPersonButton = null;
-			}
-
 			if (PeopleSearchBar != null) {
 				PeopleSearchBar.Dispose ();
 				PeopleSearchBar = null;

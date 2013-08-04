@@ -42,7 +42,7 @@ namespace Financer
                 cell = new CategoriesCell ();
             }
 
-            var category = this.controller.FilteredCategories.ElementAt (indexPath.Section).Value [indexPath.Row];
+            var category = this.controller.FilteredCategories.CategoryForIndexPath(indexPath);
             cell.UpdateCell (category);
 
             return cell;

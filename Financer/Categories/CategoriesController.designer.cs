@@ -9,22 +9,14 @@ using System.CodeDom.Compiler;
 
 namespace Financer
 {
-    [Register("CategoriesController")]
-    partial class CategoriesController
+	[Register ("CategoriesController")]
+	partial class CategoriesController
 	{
-		[Outlet]
-		MonoTouch.UIKit.UIBarButtonItem AddNewCategoryButton { get; set; }
-
 		[Outlet]
 		MonoTouch.UIKit.UISearchBar CategoriesSearchBar { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (AddNewCategoryButton != null) {
-				AddNewCategoryButton.Dispose ();
-				AddNewCategoryButton = null;
-			}
-
 			if (CategoriesSearchBar != null) {
 				CategoriesSearchBar.Dispose ();
 				CategoriesSearchBar = null;

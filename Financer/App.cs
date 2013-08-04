@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using MonoTouch.UIKit;
 
 namespace Financer
 {
@@ -25,18 +26,18 @@ namespace Financer
 
         private static void InsertDummyPeople()
         {
-            FinancerModel.AddPerson (new Person("Nikola Irinchev") { IsCurrentUser = true });
-            FinancerModel.AddPerson (new Person ("Telerik"));
-            FinancerModel.AddPerson (new Person("Mrusnoto"));
-            FinancerModel.AddPerson (new Person("Elena Kufova"));
-            FinancerModel.AddPerson (new Person("Telerik Cafeteria"));
+            FinancerModel.AddOrUpdate (new Person("Nikola Irinchev") { IsCurrentUser = true });
+            FinancerModel.AddOrUpdate (new Person ("Telerik"));
+            FinancerModel.AddOrUpdate (new Person("Mrusnoto"));
+            FinancerModel.AddOrUpdate (new Person("Elena Kufova"));
+            FinancerModel.AddOrUpdate (new Person("Telerik Cafeteria"));
         }
 
         private static void InsertDummyCategories()
         {
-            FinancerModel.AddCategory (new Category ("Заплата", ""));
-            FinancerModel.AddCategory (new Category ("Наем", ""));
-            FinancerModel.AddCategory (new Category ("Храна", ""));
+            FinancerModel.AddOrUpdate (new Category ("Заплата", "bla bla bla", UIColor.Red));
+            FinancerModel.AddOrUpdate (new Category ("Наем", "bla bla bla", UIColor.Green));
+            FinancerModel.AddOrUpdate (new Category ("Храна", "bla bla bla", UIColor.Blue));
         }
 
         private static void InsertDummyTransactions ()
@@ -72,7 +73,7 @@ namespace Financer
 
         private static void GenerateTransaction (string description, int senderId, int receiverId, int categoryId, double amount, DateTime date)
         {
-            FinancerModel.AddTransaction (new Transaction () {
+            FinancerModel.AddOrUpdate (new Transaction () {
                 CategoryId = categoryId,
                 Amount = amount,
                 Date = date,

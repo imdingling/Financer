@@ -45,6 +45,18 @@ namespace Financer
             this.UpdateFilteredCategories ();
         }
 
+        public override void PrepareForSegue (UIStoryboardSegue segue, NSObject sender)
+        {
+            if (segue.Identifier == "Old") {
+                var controller = segue.DestinationViewController as CategoryController;
+                if (controller != null) {
+                    controller.Category = this.FilteredCategories.CategoryForIndexPath (this.TableView.IndexPathForSelectedRow);
+                }
+            }
+
+            base.PrepareForSegue (segue, sender);
+        }
+
         private void TableViewScrolled (object sender, EventArgs e)
         {
             this.CategoriesSearchBar.ResignFirstResponder ();

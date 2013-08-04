@@ -1,5 +1,6 @@
 using System;
 using SQLite;
+using MonoTouch.UIKit;
 
 namespace Financer
 {
@@ -12,10 +13,23 @@ namespace Financer
 
         public string Description { get; set; }
 
-        public Category(string name, string description)
+        public int ColorInt { get; set; }
+
+        [Ignore]
+        public UIColor Color {
+            get {
+                return this.ColorInt.ToColor ();
+            }
+            set {
+                this.ColorInt = value.ToInt ();
+            }
+        }
+
+        public Category(string name, string description, UIColor color)
         {
             this.Name = name;
             this.Description = description;
+            this.Color = color;
         }
 
         public Category()

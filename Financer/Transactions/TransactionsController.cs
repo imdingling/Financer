@@ -9,8 +9,8 @@ namespace Financer
 {
     public partial class TransactionsController : UITableViewController
     {
-        public Dictionary<DateTime, Transaction[]> FilteredTransactions { get; private set; }
         private LazyInvoker lazySearchTimer;
+        private TransactionsSource transactionsSource;
 
         public TransactionsController ()
         {
@@ -24,7 +24,7 @@ namespace Financer
 
         private void Initialize()
         {
-            this.FilteredTransactions = GetTransactionDictionary (FinancerModel.GetTransactions());
+            this.transactionsSource = new TransactionsSource (FinancerModel.GetTransactions().ToTransactionDictionary());
             this.lazySearchTimer = new LazyInvoker (0.5, this.Search);
         }
 
@@ -36,7 +36,7 @@ namespace Financer
         public override void ViewDidLoad ()
         {
             base.ViewDidLoad ();
-            this.TableView.Source = new TransactionsSource (this);
+            this.TableView.Source = this.transactionsSource;
 
             this.TableView.Scrolled += this.TableViewScrolled;
 
@@ -66,7 +66,6 @@ namespace Financer
         private void Search()
         {
             this.UpdateFilteredTransactions ();
-            this.TableView.ReloadData ();
         }
 
         public override void ViewDidAppear (bool animated)
@@ -76,13 +75,8 @@ namespace Financer
 
         private void UpdateFilteredTransactions()
         {
-            this.FilteredTransactions = GetTransactionDictionary (FinancerModel.GetTransactions().Where (transaction => transaction.ContainsSearchWord (this.HistorySearchBar.Text)));
+            this.transactionsSource.UpdateTransactions (FinancerModel.GetTransactions ().Where (transaction => transaction.ContainsSearchWord (this.HistorySearchBar.Text)).ToTransactionDictionary());
             this.TableView.ReloadData ();
-        }
-
-        private static Dictionary<DateTime, Transaction[]> GetTransactionDictionary(IEnumerable<Transaction> transactions)
-        {
-            return transactions.GroupBy (transaction => transaction.Date.Date).OrderByDescending(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.ToArray());
         }
     }
 }

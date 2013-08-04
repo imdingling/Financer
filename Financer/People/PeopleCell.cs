@@ -25,15 +25,10 @@ namespace Financer
 
             var balance = FinancerModel.GetBalance (person);
 
-            this.DirectionImage.Image = GetDirectionImage(balance);
+            this.DirectionImage.Image = person.UIImage;
             this.NameLabel.Text = person.ToString ();
             this.AmountLabel.Text = balance.ToString ("0.00") + " лв.";
             this.AmountLabel.TextColor = GetAmountColor (balance);
-        }
-
-        private static UIImage GetDirectionImage(double balance)
-        {
-            return null;
         }
 
         private static UIColor GetAmountColor(double balance)

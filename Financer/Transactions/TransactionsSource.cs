@@ -9,26 +9,26 @@ namespace Financer
 {
     public class TransactionsSource : UITableViewSource
     {
-        private TransactionsController controller;
+        private Dictionary<DateTime, Transaction[]> transactions;
 
-        public TransactionsSource (TransactionsController controller)
+        public TransactionsSource (Dictionary<DateTime, Transaction[]> transactions)
         {
-            this.controller = controller;
+            this.UpdateTransactions (transactions);
         }
 
         public override int NumberOfSections (UITableView tableView)
         {
-            return this.controller.FilteredTransactions.Keys.Count;
+            return this.transactions.Keys.Count;
         }
 
         public override int RowsInSection (UITableView tableview, int section)
         {
-            return this.controller.FilteredTransactions.ElementAt(section).Value.Length;
+            return this.transactions.ElementAt(section).Value.Length;
         }
 
         public override string TitleForHeader (UITableView tableView, int section)
         {
-            return this.controller.FilteredTransactions.ElementAt (section).Key.ToString ("d");
+            return this.transactions.ElementAt (section).Key.ToString ("d");
         }
 
         public override string TitleForFooter (UITableView tableView, int section)
@@ -43,10 +43,15 @@ namespace Financer
                 cell = new TransactionsCell ();
             }
       
-            var transaction = this.controller.FilteredTransactions.ElementAt (indexPath.Section).Value [indexPath.Row];
+            var transaction = this.transactions.TransactionForIndexPath (indexPath);
             cell.UpdateCell (transaction);
       
             return cell;
+        }
+
+        public void UpdateTransactions(Dictionary<DateTime, Transaction[]> transactions)
+        {
+            this.transactions = transactions;
         }
     }
 }

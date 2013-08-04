@@ -1,5 +1,6 @@
 using System;
 using SQLite;
+using MonoTouch.UIKit;
 
 namespace Financer
 {
@@ -10,11 +11,25 @@ namespace Financer
 
         public string Name { get; set; }
 
+        public string Email { get; set; }
+
         public bool IsCurrentUser { get; set; }
     
         public Person(string name)
         {
             this.Name = name;
+        }
+
+        public byte[] Image { get; set; }
+
+        public UIImage UIImage {
+            get {
+                if (this.Image == null) {
+                    return Sys.RandomPersonImage;
+                } else {
+                    return this.Image.ToUIImage ();
+                }
+            }
         }
 
         public Person()
@@ -34,7 +49,6 @@ namespace Financer
 
             return this.Name.Contains (value, StringComparison.OrdinalIgnoreCase);
         }
-
     }
 }
 

@@ -37,19 +37,70 @@ namespace Financer
             return DB.Table<Person> ().FirstOrDefault (p => p.IsCurrentUser);
         }
 
-        public static int AddPerson(Person person)
+        public static int AddOrUpdate(Person person)
         {
-            return DB.Insert (person);
+            if (person.Id == 0) {
+                return DB.Insert (person);
+            } else {
+                return DB.Update (person);
+            }
         }
 
-        public static int AddTransaction(Transaction transaction)
+        public static int AddOrUpdate(Transaction transaction)
         {
-            return DB.Insert (transaction);
+            if (transaction.Id == 0) {
+                return DB.Insert (transaction);
+            } else {
+                return DB.Update (transaction);
+            }
         }
 
-        public static int AddCategory(Category category)
+        public static int AddOrUpdate(Category category)
         {
-            return DB.Insert (category);
+            if (category.Id == 0) {
+                return DB.Insert (category);
+            } else {
+                return DB.Update (category);
+            }
+        }
+
+        public static int Delete(Category category)
+        {
+            var result = 0;
+            if (category != null) {            
+                DB.BeginTransaction ();
+                var transactionsToDelete = GetTransactions ().Where (t => t.CategoryId == category.Id).ToArray ();
+                foreach (var transaction in transactionsToDelete) {
+                    result += DB.Delete (transaction);
+                }
+
+                result += DB.Delete (category);
+                DB.Commit ();
+            }
+
+            return result;
+        }
+
+        public static int Delete(Person person)
+        {
+            var result = 0;
+            if (person != null) {
+                DB.BeginTransaction ();
+                var transactionsToDelete = GetTransactions ().Where (t => t.ReceiverId == person.Id || t.SenderId == person.Id).ToArray ();
+                foreach (var transaction in transactionsToDelete) {
+                    result += DB.Delete (transaction);
+                }
+
+                result += DB.Delete (person);
+                DB.Commit ();
+            }
+
+            return result;
+        }
+
+        public static int Delete(Transaction transaction)
+        {
+            return DB.Delete (transaction);
         }
 
         public static double GetBalance(Person person)
