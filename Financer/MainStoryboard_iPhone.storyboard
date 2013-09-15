@@ -300,7 +300,7 @@
         <scene sceneID="Imd-mr-wIf">
             <objects>
                 <tableViewController id="wfz-Xn-HvS" customClass="PeopleController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="oeO-1g-7tq">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="oeO-1g-7tq">
                         <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -341,7 +341,6 @@
                                     <outlet property="AmountLabel" destination="QqV-0g-NHA" id="Vod-NK-sWU"/>
                                     <outlet property="DirectionImage" destination="AM1-JL-nMe" id="j0i-Nk-LLx"/>
                                     <outlet property="NameLabel" destination="6II-PT-1P7" id="8Pe-Aw-2nY"/>
-                                    <segue destination="4GH-c2-GpN" kind="push" identifier="Old" id="eba-8w-HJa"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -355,12 +354,14 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="AddPersonButton" destination="syd-Bk-pht" id="lQf-yD-SYr"/>
                         <outlet property="PeopleSearchBar" destination="HDm-Fj-aXd" id="7ZO-Ky-Opg"/>
+                        <segue destination="4GH-c2-GpN" kind="push" identifier="Old" id="B60-PX-sPa"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j7t-Fn-CY2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1085" y="-406"/>
+            <point key="canvasLocation" x="1000" y="-406"/>
         </scene>
         <!--Person Controller - New Person-->
         <scene sceneID="0IX-4F-iTM">
@@ -505,7 +506,7 @@
         <scene sceneID="1Ia-oF-Q52">
             <objects>
                 <tableViewController id="pH2-nA-MAJ" customClass="CategoriesController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="Ttt-uR-iio">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="Ttt-uR-iio">
                         <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -541,7 +542,6 @@
                                 <connections>
                                     <outlet property="AmountLabel" destination="S7q-Qo-xrM" id="Xbo-mu-7L8"/>
                                     <outlet property="CategoryNameLabel" destination="wZA-fO-GGs" id="s8T-Jz-xyC"/>
-                                    <segue destination="497-zb-7PW" kind="push" identifier="Old" id="leg-8z-67U"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -555,7 +555,9 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="AddCategoryButton" destination="5jh-gY-1nB" id="O2K-cE-rFQ"/>
                         <outlet property="CategoriesSearchBar" destination="x9N-eT-uzY" id="6FV-PH-v0m"/>
+                        <segue destination="497-zb-7PW" kind="push" identifier="Old" id="aOV-Yo-5Sg"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UQ2-YK-bjp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -779,6 +781,7 @@
         <class className="CategoriesController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CategoriesController.h"/>
             <relationships>
+                <relationship kind="outlet" name="AddCategoryButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="CategoriesSearchBar" candidateClass="UISearchBar"/>
             </relationships>
         </class>
@@ -805,6 +808,7 @@
         <class className="PeopleController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PeopleController.h"/>
             <relationships>
+                <relationship kind="outlet" name="AddPersonButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="PeopleSearchBar" candidateClass="UISearchBar"/>
             </relationships>
         </class>
@@ -858,8 +862,8 @@
     <inferredMetricsTieBreakers>
         <segue reference="Ws8-Wn-wLW"/>
         <segue reference="2mc-nb-RLL"/>
-        <segue reference="D00-XG-i4A"/>
-        <segue reference="Mdp-K1-z3r"/>
         <segue reference="I3D-hn-7pM"/>
+        <segue reference="B60-PX-sPa"/>
+        <segue reference="aOV-Yo-5Sg"/>
     </inferredMetricsTieBreakers>
 </document>

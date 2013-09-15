@@ -47,11 +47,6 @@ namespace Financer
             return this.Name.Contains (value, StringComparison.OrdinalIgnoreCase) ||
                    this.Description.Contains (value, StringComparison.OrdinalIgnoreCase);
         }
-
-        public static Dictionary<char, Category[]> GetCategoriesDictionary(IEnumerable<Category> categories)
-        {
-            return categories.GroupBy (category => category.Name[0]).OrderBy(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.ToArray());
-        }
     }
 }
 

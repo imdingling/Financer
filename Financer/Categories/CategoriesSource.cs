@@ -59,9 +59,12 @@ namespace Financer
             return cell;
         }
 
-        public void Update(Dictionary<char, Category[]> categories)
+        public void Update(Dictionary<char, Category[]> categories, UITableView tableView = null)
         {
             this.categories = categories;
+            if (tableView != null) {
+                tableView.ReloadData ();
+            }
         }
 
         public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
@@ -74,4 +77,3 @@ namespace Financer
         }
     }
 }
-

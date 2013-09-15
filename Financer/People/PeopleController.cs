@@ -9,6 +9,8 @@ namespace Financer
 {
     public partial class PeopleController : UITableViewController
     {
+        private const string OldSegueIdentifier = "Old";
+
         private Dictionary<char, Person[]> filteredPeople;
         public Dictionary<char, Person[]> FilteredPeople { 
             get {
@@ -18,16 +20,44 @@ namespace Financer
                 if (value != this.filteredPeople) {
                     this.filteredPeople = value;
                     if (this.peopleSource != null) {
-                        this.peopleSource.Update (value);
+                        this.peopleSource.Update (value, this.TableView);
                     }
                 }
             }
         }
 
-        public bool IsSelecting { get; set; }
-
         private PeopleSource peopleSource;
         private LazyInvoker lazySearchTimer;
+
+        private Action<Person> selectionCallback;
+        public Action<Person> SelectionCallback { 
+            get {
+                return this.selectionCallback;
+            }
+            set {
+                if (value != this.selectionCallback) {
+                    this.selectionCallback = value;
+                    this.AddPersonButton.Enabled = value == null;
+                }
+            }
+        }
+
+        private Person selectedPerson;
+        private Person SelectedPerson { 
+            get {
+                return this.selectedPerson;
+            }
+            set {
+                if (value != this.selectedPerson) {
+                    this.selectedPerson = value;
+                    if (this.SelectionCallback != null) {
+                        this.SelectionCallback (value);
+                    } else {
+                        this.PerformSegue (OldSegueIdentifier, this);
+                    }
+                }
+            }
+        }
 
         public PeopleController () : base ()
         {
@@ -42,7 +72,9 @@ namespace Financer
         private void Initialize ()
         {
             this.FilteredPeople = new Dictionary<char, Person[]> ();
-            this.peopleSource = new PeopleSource (this.FilteredPeople);
+            this.peopleSource = new PeopleSource (this.FilteredPeople, null, (person) => {
+                this.SelectedPerson = person;
+            });
             this.lazySearchTimer = new LazyInvoker (0.5, this.UpdateFilteredPeople);
         }
 
@@ -50,8 +82,6 @@ namespace Financer
         {
             base.ViewDidLoad ();
             TableView.Source = this.peopleSource;
-
-            this.TableView.Scrolled += this.TableViewScrolled;
 
             this.PeopleSearchBar.TextChanged += this.HandleSearchBarTextChanged;
         }
@@ -65,19 +95,14 @@ namespace Financer
 
         public override void PrepareForSegue (UIStoryboardSegue segue, NSObject sender)
         {
-            if (segue.Identifier == "Old") {
+            if (segue.Identifier == OldSegueIdentifier) {
                 var controller = segue.DestinationViewController as PersonController;
                 if (controller != null) {
-                    controller.Person = this.FilteredPeople.PersonForIndexPath (this.TableView.IndexPathForSelectedRow);
+                    controller.Person = this.SelectedPerson;
                 }
             }
 
             base.PrepareForSegue (segue, sender);
-        }
-
-        private void TableViewScrolled (object sender, EventArgs e)
-        {
-            this.PeopleSearchBar.ResignFirstResponder ();
         }
 
         private void HandleSearchBarTextChanged (object sender, UISearchBarTextChangedEventArgs e)
@@ -87,7 +112,7 @@ namespace Financer
 
         private void UpdateFilteredPeople ()
         {
-            this.FilteredPeople = Person.GetPeopleDictionary (FinancerModel.GetOtherPeople ().Where (person => person.ContainsSearchWord(this.PeopleSearchBar.Text)));
+            this.FilteredPeople = FinancerModel.GetOtherPeople ().Where (person => person.ContainsSearchWord(this.PeopleSearchBar.Text)).GetPeopleDictionary();
             this.TableView.ReloadData ();
         }
     }

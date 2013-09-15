@@ -59,9 +59,12 @@ namespace Financer
             return cell;
         }
 
-        public void Update(Dictionary<char, Person[]> people)
+        public void Update(Dictionary<char, Person[]> people, UITableView tableView = null)
         {
             this.people = people;
+            if (tableView != null) {
+                tableView.ReloadData ();
+            }
         }
 
         public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
@@ -74,4 +77,3 @@ namespace Financer
         }
     }
 }
-

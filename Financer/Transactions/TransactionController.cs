@@ -19,6 +19,36 @@ namespace Financer
         private CategoriesSource categorySource;
         private PeopleSource peopleSource;
 
+        private Category currentCategory;
+        private Category CurrentCategory {
+            get {
+                return this.currentCategory;
+            }
+            set {
+                if (value != this.currentCategory) {
+                    this.currentCategory = value;
+                    if (this.categorySource != null) {
+                        this.categorySource.Update (new[] { this.currentCategory }.GetCategoriesDictionary(), this.CategoryTableView);
+                    }
+                }
+            }
+        }
+
+        private Person currentPerson;
+        private Person CurrentPerson {
+            get {
+                return this.currentPerson;
+            }
+            set {
+                if (value != this.currentPerson) {
+                    this.currentPerson = value;
+                    if (this.peopleSource != null) {
+                        this.peopleSource.Update (new[] { this.currentPerson }.GetPeopleDictionary(), this.PersonTableView);
+                    }
+                }
+            }
+        }
+
         private bool isEditing;
         private bool IsEditing {
             get {
@@ -67,6 +97,7 @@ namespace Financer
             this.SetupTableViews ();
             this.SetupCancelButton ();
             this.SetupAmountTextField ();
+            this.SetupDateButton ();
 
             if (this.Transaction != null) {
                 this.IsEditing = false;
@@ -100,15 +131,15 @@ namespace Financer
 
         private void SetupTableViews()
         {
-            var category = this.Transaction == null ? FinancerModel.GetCategories ().FirstOrDefault () : this.Transaction.Category;
-            this.categorySource = new CategoriesSource (Category.GetCategoriesDictionary(new[] { category }), "Category", (c) => {
+            this.currentCategory = this.Transaction == null ? FinancerModel.GetCategories ().FirstOrDefault () : this.Transaction.Category;
+            this.categorySource = new CategoriesSource (new[] { this.currentCategory }.GetCategoriesDictionary(), "Category", (c) => {
                 this.PerformSegue(this.IsEditing ? SelectCategorySegue : ReviewCategorySegue, this);
             });
             this.CategoryTableView.Source = this.categorySource;
             this.CategoryTableView.AlwaysBounceVertical = false;
 
-            var person = this.Transaction == null ? FinancerModel.GetOtherPeople ().FirstOrDefault () : this.Transaction.Contact;
-            this.peopleSource = new PeopleSource (Person.GetPeopleDictionary (new[] { person }), "Contact", (p) => {
+            this.currentPerson = this.Transaction == null ? FinancerModel.GetOtherPeople ().FirstOrDefault () : this.Transaction.Contact;
+            this.peopleSource = new PeopleSource (new[] { this.currentPerson }.GetPeopleDictionary(), "Contact", (p) => {
                 this.PerformSegue(this.IsEditing ? SelectPersonSegue : ReviewPersonSegue, this);
             });
             this.PersonTableView.Source = this.peopleSource;
@@ -138,6 +169,11 @@ namespace Financer
         private void SetupAmountTextField()
         {
             this.AmountTextField.EditingChanged += this.OnAmountTextFieldEditingChanged;
+        }
+
+        private void SetupDateButton()
+        {
+            this.DateButton.SetTitle(DateTime.Now.ToString("g"), UIControlState.Normal);
         }
         #endregion
 
@@ -212,6 +248,9 @@ namespace Financer
             this.Transaction.Amount = double.TryParse(this.AmountTextField.Text, out amount) ? amount : 0;
             this.Transaction.Description = this.DescriptionTextField.Text;
             this.Transaction.Date = DateTime.ParseExact(this.DateButton.Title(UIControlState.Normal), "g", null);
+            this.Transaction.CategoryId = this.CurrentCategory.Id;
+            this.Transaction.ReceiverId = this.DirectionSwitch.On ? App.CurrentUser.Id : this.CurrentPerson.Id;
+            this.Transaction.SenderId = this.DirectionSwitch.On ? this.CurrentPerson.Id : App.CurrentUser.Id;
 
             FinancerModel.AddOrUpdate (this.Transaction);
         }
@@ -228,7 +267,10 @@ namespace Financer
             case SelectCategorySegue: 
                 var categoriesController = segue.DestinationViewController as CategoriesController;
                 if (categoriesController != null) {
-                    categoriesController.IsSelecting = true;
+                    categoriesController.SelectionCallback = (category) => {
+                        categoriesController.NavigationController.PopViewControllerAnimated(true);
+                        this.CurrentCategory = category;
+                    };
                 }
                 break;
             case ReviewPersonSegue: 
@@ -240,7 +282,10 @@ namespace Financer
             case SelectPersonSegue: 
                 var peopleController = segue.DestinationViewController as PeopleController;
                 if (peopleController != null) {
-                    peopleController.IsSelecting = true;
+                    peopleController.SelectionCallback = (person) => {
+                        peopleController.NavigationController.PopViewControllerAnimated(true);
+                        this.CurrentPerson = person;
+                    };
                 }
                 break;
             }

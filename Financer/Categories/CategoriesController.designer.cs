@@ -13,6 +13,9 @@ namespace Financer
 	partial class CategoriesController
 	{
 		[Outlet]
+		MonoTouch.UIKit.UIBarButtonItem AddCategoryButton { get; set; }
+
+		[Outlet]
 		MonoTouch.UIKit.UISearchBar CategoriesSearchBar { get; set; }
 		
 		void ReleaseDesignerOutlets ()
@@ -20,6 +23,11 @@ namespace Financer
 			if (CategoriesSearchBar != null) {
 				CategoriesSearchBar.Dispose ();
 				CategoriesSearchBar = null;
+			}
+
+			if (AddCategoryButton != null) {
+				AddCategoryButton.Dispose ();
+				AddCategoryButton = null;
 			}
 		}
 	}

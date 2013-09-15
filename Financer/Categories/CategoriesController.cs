@@ -9,6 +9,8 @@ namespace Financer
 {
     public partial class CategoriesController : UITableViewController
     {
+        private const string OldSegueIdentifier = "Old";
+
         private Dictionary<char, Category[]> filteredCategories; 
         public Dictionary<char, Category[]> FilteredCategories { 
             get {
@@ -18,7 +20,7 @@ namespace Financer
                 if (this.filteredCategories != value) {
                     this.filteredCategories = value;
                     if (this.categoriesSource != null) {
-                        this.categoriesSource.Update (value);
+                        this.categoriesSource.Update (value, this.TableView);
                     }
                 }
             }
@@ -26,7 +28,35 @@ namespace Financer
         private LazyInvoker lazySearchTimer;
         private CategoriesSource categoriesSource;
 
-        public bool IsSelecting { get; set; }
+        private Action<Category> selectionCallback;
+        public Action<Category> SelectionCallback { 
+            get {
+                return this.selectionCallback;
+            }
+            set {
+                if (value != this.selectionCallback) {
+                    this.selectionCallback = value;
+                    this.AddCategoryButton.Enabled = value == null;
+                }
+            }
+        }
+
+        private Category selectedCategory;
+        private Category SelectedCategory { 
+            get {
+                return this.selectedCategory;
+            }
+            set {
+                if (value != this.selectedCategory) {
+                    this.selectedCategory = value;
+                    if (this.SelectionCallback != null) {
+                        this.SelectionCallback (value);
+                    } else {
+                        this.PerformSegue (OldSegueIdentifier, this);
+                    }
+                }
+            }
+        }
 
         public CategoriesController () : base ()
         {
@@ -41,16 +71,16 @@ namespace Financer
         private void Initialize()
         {
             this.FilteredCategories = new Dictionary<char, Category[]> ();
-            this.categoriesSource = new CategoriesSource (this.FilteredCategories);
-            this.lazySearchTimer = new LazyInvoker (0.5, this.Search);
+            this.categoriesSource = new CategoriesSource (this.FilteredCategories, null, (category) => {
+                this.SelectedCategory = category;
+            });
+            this.lazySearchTimer = new LazyInvoker (0.5, this.UpdateFilteredCategories);
         }
 
         public override void ViewDidLoad ()
         {
             base.ViewDidLoad ();
-            TableView.Source = this.categoriesSource;
-
-            this.TableView.Scrolled += this.TableViewScrolled;
+            this.TableView.Source = this.categoriesSource;
 
             this.CategoriesSearchBar.TextChanged += this.HandleSearchBarTextChanged;
         }
@@ -64,19 +94,14 @@ namespace Financer
 
         public override void PrepareForSegue (UIStoryboardSegue segue, NSObject sender)
         {
-            if (segue.Identifier == "Old") {
+            if (segue.Identifier == OldSegueIdentifier) {
                 var controller = segue.DestinationViewController as CategoryController;
                 if (controller != null) {
-                    controller.Category = this.FilteredCategories.CategoryForIndexPath (this.TableView.IndexPathForSelectedRow);
+                    controller.Category = this.SelectedCategory;
                 }
             }
 
             base.PrepareForSegue (segue, sender);
-        }
-
-        private void TableViewScrolled (object sender, EventArgs e)
-        {
-            this.CategoriesSearchBar.ResignFirstResponder ();
         }
 
         private void HandleSearchBarTextChanged (object sender, UISearchBarTextChangedEventArgs e)
@@ -84,15 +109,9 @@ namespace Financer
             lazySearchTimer.Run ();
         }
 
-        private void Search()
-        {
-            this.UpdateFilteredCategories ();
-            this.TableView.ReloadData ();
-        }
-
         private void UpdateFilteredCategories()
         {
-            this.FilteredCategories = Category.GetCategoriesDictionary (FinancerModel.GetCategories().Where (category => category.ContainsSearchWord(this.CategoriesSearchBar.Text)));
+            this.FilteredCategories = FinancerModel.GetCategories().Where (category => category.ContainsSearchWord(this.CategoriesSearchBar.Text)).GetCategoriesDictionary();
             this.TableView.ReloadData ();
         }
     }

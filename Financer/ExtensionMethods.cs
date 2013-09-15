@@ -46,7 +46,17 @@ namespace Financer
         #region IEnumerable<*>
         public static Dictionary<DateTime, Transaction[]> ToTransactionDictionary (this IEnumerable<Transaction> transactions)
         {
-            return transactions.GroupBy (transaction => transaction.Date.Date).OrderByDescending (gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.ToArray ());
+            return transactions.GroupBy (transaction => transaction.Date.Date).OrderByDescending (gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.OrderByDescending(t => t.Date).ToArray ());
+        }
+
+        public static Dictionary<char, Category[]> GetCategoriesDictionary(this IEnumerable<Category> categories)
+        {
+            return categories.GroupBy (category => category.Name[0]).OrderBy(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.OrderBy(c => c.Name).ToArray());
+        }
+
+        public static Dictionary<char, Person[]> GetPeopleDictionary (this IEnumerable<Person> people)
+        {
+            return people.GroupBy (person => person.Name [0]).OrderBy(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.OrderBy(p => p.Name).ToArray ());
         }
         #endregion
         #region int
