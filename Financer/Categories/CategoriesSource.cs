@@ -3,31 +3,42 @@ using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Financer
 {
     public class CategoriesSource : UITableViewSource
     {
-        private CategoriesController controller;
+        private Dictionary<char, Category[]> categories;
+        private string headerText;
+        private Action<Category> callback;
 
-        public CategoriesSource (CategoriesController controller)
+        public CategoriesSource (Dictionary<char, Category[]> categories, string headerText = null, Action<Category> callback = null)
         {
-            this.controller = controller;
+            this.Update(categories);
+            this.headerText = headerText;
+            this.callback = callback;
         }
 
         public override int NumberOfSections (UITableView tableView)
         {
-            return controller.FilteredCategories.Keys.Count;
+            return categories.Keys.Count;
         }
 
         public override int RowsInSection (UITableView tableview, int section)
         {
-            return this.controller.FilteredCategories.ElementAt(section).Value.Length;
+            return this.categories.ElementAt(section).Value.Length;
         }
 
         public override string TitleForHeader (UITableView tableView, int section)
         {
-            return this.controller.FilteredCategories.ElementAt (section).Key.ToString ();
+            if (!string.IsNullOrEmpty (this.headerText)) {
+                return this.headerText;
+            } else if (this.categories.Count < 2) {
+                return null;
+            } else {
+                return this.categories.ElementAt (section).Key.ToString ();
+            }
         }
 
         public override string TitleForFooter (UITableView tableView, int section)
@@ -42,10 +53,24 @@ namespace Financer
                 cell = new CategoriesCell ();
             }
 
-            var category = this.controller.FilteredCategories.CategoryForIndexPath(indexPath);
+            var category = this.categories.CategoryForIndexPath(indexPath);
             cell.UpdateCell (category);
 
             return cell;
+        }
+
+        public void Update(Dictionary<char, Category[]> categories)
+        {
+            this.categories = categories;
+        }
+
+        public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
+        {
+            tableView.DeselectRow (indexPath, true);
+            if (this.callback != null) {
+                var category = this.categories.CategoryForIndexPath (indexPath);
+                callback (category);
+            }
         }
     }
 }

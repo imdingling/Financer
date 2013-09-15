@@ -3,31 +3,42 @@ using System.Drawing;
 using System.Linq;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using System.Collections.Generic;
 
 namespace Financer
 {
     public class PeopleSource : UITableViewSource
     {
-        private PeopleController controller;
+        private Dictionary<char, Person[]> people;
+        private string headerText;
+        private Action<Person> callback;
 
-        public PeopleSource (PeopleController controller)
+        public PeopleSource (Dictionary<char, Person[]> people, string headerText = null, Action<Person> callback = null)
         {
-            this.controller = controller;
+            this.Update (people);
+            this.headerText = headerText;
+            this.callback = callback;
         }
 
         public override int NumberOfSections (UITableView tableView)
         {
-            return controller.FilteredPeople.Keys.Count;
+            return people.Keys.Count;
         }
 
         public override int RowsInSection (UITableView tableview, int section)
         {
-            return this.controller.FilteredPeople.ElementAt(section).Value.Length;
+            return this.people.ElementAt(section).Value.Length;
         }
 
         public override string TitleForHeader (UITableView tableView, int section)
         {
-            return this.controller.FilteredPeople.ElementAt (section).Key.ToString ();
+            if (!string.IsNullOrEmpty (this.headerText)) {
+                return this.headerText;
+            } else if (this.people.Count < 2) {
+                return null;
+            } else {
+                return this.people.ElementAt (section).Key.ToString ();
+            }
         }
 
         public override string TitleForFooter (UITableView tableView, int section)
@@ -42,10 +53,24 @@ namespace Financer
                 cell = new PeopleCell ();
             }
 
-            var person = this.controller.FilteredPeople.PersonForIndexPath(indexPath);
+            var person = this.people.PersonForIndexPath(indexPath);
             cell.UpdateCell (person);
 
             return cell;
+        }
+
+        public void Update(Dictionary<char, Person[]> people)
+        {
+            this.people = people;
+        }
+
+        public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
+        {
+            tableView.DeselectRow (indexPath, true);
+            if (this.callback != null) {
+                var person = this.people.PersonForIndexPath (indexPath);
+                this.callback (person);
+            }
         }
     }
 }

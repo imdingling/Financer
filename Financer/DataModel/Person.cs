@@ -1,6 +1,8 @@
 using System;
 using SQLite;
 using MonoTouch.UIKit;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Financer
 {
@@ -48,6 +50,11 @@ namespace Financer
             }
 
             return this.Name.Contains (value, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static Dictionary<char, Person[]> GetPeopleDictionary (IEnumerable<Person> people)
+        {
+            return people.GroupBy (person => person.Name [0]).OrderBy(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.ToArray ());
         }
     }
 }

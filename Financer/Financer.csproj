@@ -152,7 +152,6 @@
     <Folder Include="DataModel\" />
     <Folder Include="People\" />
     <Folder Include="Categories\" />
-    <Folder Include="Me\" />
     <Folder Include="Transactions\" />
     <Folder Include="Resources\Icons\" />
   </ItemGroup>

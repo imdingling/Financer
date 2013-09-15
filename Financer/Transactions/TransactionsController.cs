@@ -12,6 +12,21 @@ namespace Financer
         private LazyInvoker lazySearchTimer;
         private TransactionsSource transactionsSource;
 
+        private Dictionary<DateTime, Transaction[]> filteredTransactions;
+        public Dictionary<DateTime, Transaction[]> FilteredTransactions { 
+            get {
+                return this.filteredTransactions;
+            }
+            private set {
+                if (value != this.filteredTransactions) {
+                    this.filteredTransactions = value;
+                    if (this.transactionsSource != null) {
+                        this.transactionsSource.Update (value);
+                    }
+                }
+            }
+        }
+
         public TransactionsController ()
         {
             this.Initialize();
@@ -24,7 +39,8 @@ namespace Financer
 
         private void Initialize()
         {
-            this.transactionsSource = new TransactionsSource (FinancerModel.GetTransactions().ToTransactionDictionary());
+            this.FilteredTransactions = new Dictionary<DateTime, Transaction[]> ();
+            this.transactionsSource = new TransactionsSource (this.FilteredTransactions);
             this.lazySearchTimer = new LazyInvoker (0.5, this.Search);
         }
 
@@ -41,9 +57,9 @@ namespace Financer
             this.TableView.Scrolled += this.TableViewScrolled;
 
             this.HistorySearchBar.TextChanged += this.HandleSearchBarTextChanged;
-            if (FinancerModel.GetTransactions().Any ()) {
-                this.TableView.ScrollToRow (NSIndexPath.FromItemSection (0, 0), UITableViewScrollPosition.Top, false);
-            }
+//            if (FinancerModel.GetTransactions().Any ()) {
+//                this.TableView.ScrollToRow (NSIndexPath.FromItemSection (0, 0), UITableViewScrollPosition.Top, false);
+//            }
         }
 
         public override void ViewWillAppear (bool animated)
@@ -75,8 +91,20 @@ namespace Financer
 
         private void UpdateFilteredTransactions()
         {
-            this.transactionsSource.UpdateTransactions (FinancerModel.GetTransactions ().Where (transaction => transaction.ContainsSearchWord (this.HistorySearchBar.Text)).ToTransactionDictionary());
+            this.FilteredTransactions = FinancerModel.GetTransactions ().Where (transaction => transaction.ContainsSearchWord (this.HistorySearchBar.Text)).ToTransactionDictionary();
             this.TableView.ReloadData ();
+        }
+
+        public override void PrepareForSegue (UIStoryboardSegue segue, NSObject sender)
+        {
+            if (segue.Identifier == "Old") {
+                var controller = segue.DestinationViewController as TransactionController;
+                if (controller != null) {
+                    controller.Transaction = this.FilteredTransactions.TransactionForIndexPath (this.TableView.IndexPathForSelectedRow);
+                }
+            }
+
+            base.PrepareForSegue (segue, sender);
         }
     }
 }

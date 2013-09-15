@@ -13,7 +13,7 @@ namespace Financer
 
         public TransactionsSource (Dictionary<DateTime, Transaction[]> transactions)
         {
-            this.UpdateTransactions (transactions);
+            this.Update (transactions);
         }
 
         public override int NumberOfSections (UITableView tableView)
@@ -49,7 +49,7 @@ namespace Financer
             return cell;
         }
 
-        public void UpdateTransactions(Dictionary<DateTime, Transaction[]> transactions)
+        public void Update(Dictionary<DateTime, Transaction[]> transactions)
         {
             this.transactions = transactions;
         }

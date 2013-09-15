@@ -9,8 +9,24 @@ namespace Financer
 {
     public partial class PeopleController : UITableViewController
     {
-        public Dictionary<char, Person[]> FilteredPeople { get; private set; }
+        private Dictionary<char, Person[]> filteredPeople;
+        public Dictionary<char, Person[]> FilteredPeople { 
+            get {
+                return this.filteredPeople;
+            }
+            private set {
+                if (value != this.filteredPeople) {
+                    this.filteredPeople = value;
+                    if (this.peopleSource != null) {
+                        this.peopleSource.Update (value);
+                    }
+                }
+            }
+        }
 
+        public bool IsSelecting { get; set; }
+
+        private PeopleSource peopleSource;
         private LazyInvoker lazySearchTimer;
 
         public PeopleController () : base ()
@@ -26,13 +42,14 @@ namespace Financer
         private void Initialize ()
         {
             this.FilteredPeople = new Dictionary<char, Person[]> ();
-            this.lazySearchTimer = new LazyInvoker (0.5, this.Search);
+            this.peopleSource = new PeopleSource (this.FilteredPeople);
+            this.lazySearchTimer = new LazyInvoker (0.5, this.UpdateFilteredPeople);
         }
 
         public override void ViewDidLoad ()
         {
             base.ViewDidLoad ();
-            TableView.Source = new PeopleSource (this);
+            TableView.Source = this.peopleSource;
 
             this.TableView.Scrolled += this.TableViewScrolled;
 
@@ -68,22 +85,10 @@ namespace Financer
             lazySearchTimer.Run ();
         }
 
-        private void Search ()
-        {
-            this.UpdateFilteredPeople ();
-            this.FilteredPeople = GetPeopleDictionary (FinancerModel.GetOtherPeople ().Where (person => person.ToString ().Contains (this.PeopleSearchBar.Text, StringComparison.OrdinalIgnoreCase)));
-            this.TableView.ReloadData ();
-        }
-
         private void UpdateFilteredPeople ()
         {
-            this.FilteredPeople = GetPeopleDictionary (FinancerModel.GetOtherPeople ().Where (person => person.ContainsSearchWord(this.PeopleSearchBar.Text)));
+            this.FilteredPeople = Person.GetPeopleDictionary (FinancerModel.GetOtherPeople ().Where (person => person.ContainsSearchWord(this.PeopleSearchBar.Text)));
             this.TableView.ReloadData ();
-        }
-
-        private static Dictionary<char, Person[]> GetPeopleDictionary (IEnumerable<Person> people)
-        {
-            return people.GroupBy (person => person.Name [0]).OrderBy(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.ToArray ());
         }
     }
 }

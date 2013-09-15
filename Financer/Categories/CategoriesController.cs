@@ -9,8 +9,24 @@ namespace Financer
 {
     public partial class CategoriesController : UITableViewController
     {
-        public Dictionary<char, Category[]> FilteredCategories { get; private set; }
+        private Dictionary<char, Category[]> filteredCategories; 
+        public Dictionary<char, Category[]> FilteredCategories { 
+            get {
+                return this.filteredCategories;
+            }
+            private set {
+                if (this.filteredCategories != value) {
+                    this.filteredCategories = value;
+                    if (this.categoriesSource != null) {
+                        this.categoriesSource.Update (value);
+                    }
+                }
+            }
+        }
         private LazyInvoker lazySearchTimer;
+        private CategoriesSource categoriesSource;
+
+        public bool IsSelecting { get; set; }
 
         public CategoriesController () : base ()
         {
@@ -25,13 +41,14 @@ namespace Financer
         private void Initialize()
         {
             this.FilteredCategories = new Dictionary<char, Category[]> ();
+            this.categoriesSource = new CategoriesSource (this.FilteredCategories);
             this.lazySearchTimer = new LazyInvoker (0.5, this.Search);
         }
 
         public override void ViewDidLoad ()
         {
             base.ViewDidLoad ();
-            TableView.Source = new CategoriesSource (this);
+            TableView.Source = this.categoriesSource;
 
             this.TableView.Scrolled += this.TableViewScrolled;
 
@@ -75,13 +92,8 @@ namespace Financer
 
         private void UpdateFilteredCategories()
         {
-            this.FilteredCategories = GetCategoriesDictionary (FinancerModel.GetCategories().Where (category => category.ContainsSearchWord(this.CategoriesSearchBar.Text)));
+            this.FilteredCategories = Category.GetCategoriesDictionary (FinancerModel.GetCategories().Where (category => category.ContainsSearchWord(this.CategoriesSearchBar.Text)));
             this.TableView.ReloadData ();
-        }
-
-        private static Dictionary<char, Category[]> GetCategoriesDictionary(IEnumerable<Category> categories)
-        {
-            return categories.GroupBy (category => category.Name[0]).OrderBy(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.ToArray());
         }
     }
 }

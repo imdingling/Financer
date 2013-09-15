@@ -51,6 +51,12 @@ namespace Financer
             }
         }
 
+        public Person Contact {
+            get {
+                return this.IsInbound ? this.Sender : this.Receiver;
+            }
+        }
+
         public bool ContainsSearchWord(string value)
         {
             if (string.IsNullOrEmpty (value)) {
@@ -73,7 +79,7 @@ namespace Financer
 
             return this.Description.Contains (value, StringComparison.OrdinalIgnoreCase) ||
                 this.Category.ContainsSearchWord(value) ||
-                (this.IsInbound ? this.Sender.ToString ().Contains (value, StringComparison.OrdinalIgnoreCase) : this.Receiver.ToString ().Contains (value, StringComparison.OrdinalIgnoreCase));
+                this.Contact.ToString ().Contains (value, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
