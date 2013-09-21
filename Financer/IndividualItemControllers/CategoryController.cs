@@ -82,7 +82,7 @@ namespace Financer
             if (segue.Identifier == "Old") {
                 var controller = segue.DestinationViewController as TransactionController;
                 if (controller != null) {
-                    controller.Transaction = this.transactions.TransactionForIndexPath (this.TransactionsTableView.IndexPathForSelectedRow);
+                    controller.Transaction = this.transactions.ItemForIndexPath (this.TransactionsTableView.IndexPathForSelectedRow);
                 }
             }
 

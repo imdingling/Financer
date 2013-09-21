@@ -27,18 +27,8 @@ namespace Financer
             return values.Contains (value);
         }
         #endregion
-        #region Dictionary<char, *[]>
-        public static Category CategoryForIndexPath (this Dictionary<char, Category[]> dictionary, NSIndexPath indexPath)
-        {
-            return dictionary.ElementAt (indexPath.Section).Value [indexPath.Row];
-        }
-
-        public static Person PersonForIndexPath (this Dictionary<char, Person[]> dictionary, NSIndexPath indexPath)
-        {
-            return dictionary.ElementAt (indexPath.Section).Value [indexPath.Row];
-        }
-
-        public static Transaction TransactionForIndexPath (this Dictionary<DateTime, Transaction[]> dictionary, NSIndexPath indexPath)
+        #region Dictionary<T1, T2[]>
+        public static T2 ItemForIndexPath<T1, T2> (this Dictionary<T1, T2[]> dictionary, NSIndexPath indexPath)
         {
             return dictionary.ElementAt (indexPath.Section).Value [indexPath.Row];
         }

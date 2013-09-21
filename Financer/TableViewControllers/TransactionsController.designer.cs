@@ -9,17 +9,25 @@ using System.CodeDom.Compiler;
 
 namespace Financer
 {
-    [Register ("TransactionsController")]
+	[Register ("TransactionsController")]
 	partial class TransactionsController
 	{
 		[Outlet]
-		MonoTouch.UIKit.UISearchBar HistorySearchBar { get; set; }
+		protected override MonoTouch.UIKit.UIBarButtonItem AddItemButton { get; set; }
+
+		[Outlet]
+		protected override MonoTouch.UIKit.UISearchBar SearchBar { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (HistorySearchBar != null) {
-				HistorySearchBar.Dispose ();
-				HistorySearchBar = null;
+			if (SearchBar != null) {
+				SearchBar.Dispose ();
+				SearchBar = null;
+			}
+
+			if (AddItemButton != null) {
+				AddItemButton.Dispose ();
+				AddItemButton = null;
 			}
 		}
 	}

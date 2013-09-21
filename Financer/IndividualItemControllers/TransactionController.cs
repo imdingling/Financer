@@ -28,7 +28,8 @@ namespace Financer
                 if (value != this.currentCategory) {
                     this.currentCategory = value;
                     if (this.categorySource != null) {
-                        this.categorySource.Update (new[] { this.currentCategory }.GetCategoriesDictionary(), this.CategoryTableView);
+                        this.categorySource.Update (new[] { this.currentCategory }.GetCategoriesDictionary());
+                        this.CategoryTableView.ReloadData ();
                     }
                 }
             }
@@ -43,7 +44,8 @@ namespace Financer
                 if (value != this.currentPerson) {
                     this.currentPerson = value;
                     if (this.peopleSource != null) {
-                        this.peopleSource.Update (new[] { this.currentPerson }.GetPeopleDictionary(), this.PersonTableView);
+                        this.peopleSource.Update (new[] { this.currentPerson }.GetPeopleDictionary());
+                        this.PersonTableView.ReloadData ();
                     }
                 }
             }
@@ -132,16 +134,20 @@ namespace Financer
         private void SetupTableViews()
         {
             this.currentCategory = this.Transaction == null ? FinancerModel.GetCategories ().FirstOrDefault () : this.Transaction.Category;
-            this.categorySource = new CategoriesSource (new[] { this.currentCategory }.GetCategoriesDictionary(), "Category", (c) => {
+            this.categorySource = new CategoriesSource (new[] { this.currentCategory }.GetCategoriesDictionary ());
+            this.categorySource.HeaderText = "Category";
+            this.categorySource.Callback = (c) => {
                 this.PerformSegue(this.IsEditing ? SelectCategorySegue : ReviewCategorySegue, this);
-            });
+            };
             this.CategoryTableView.Source = this.categorySource;
             this.CategoryTableView.AlwaysBounceVertical = false;
 
             this.currentPerson = this.Transaction == null ? FinancerModel.GetOtherPeople ().FirstOrDefault () : this.Transaction.Contact;
-            this.peopleSource = new PeopleSource (new[] { this.currentPerson }.GetPeopleDictionary(), "Contact", (p) => {
+            this.peopleSource = new PeopleSource (new[] { this.currentPerson }.GetPeopleDictionary());
+            this.peopleSource.Callback = (p) => {
                 this.PerformSegue(this.IsEditing ? SelectPersonSegue : ReviewPersonSegue, this);
-            });
+            };
+            this.peopleSource.HeaderText = "Contact";
             this.PersonTableView.Source = this.peopleSource;
             this.PersonTableView.AlwaysBounceVertical = false;
         }
@@ -231,11 +237,13 @@ namespace Financer
 
         private void LoadFromTransaction()
         {
-            this.NavigationItem.Title = this.Transaction.Contact.Name;
+            this.NavigationItem.Title = this.Transaction.Description;
             this.DescriptionTextField.Text = this.Transaction.Description;
             this.DirectionSwitch.On = this.Transaction.IsInbound;
             this.AmountTextField.Text = this.Transaction.Amount.ToString("0.00");
             this.DateButton.SetTitle (this.Transaction.Date.ToString ("g"), UIControlState.Normal);
+            this.PersonTableView.ReloadData ();
+            this.CategoryTableView.ReloadData ();
         }
 
         private void SaveTransaction()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4457.6" systemVersion="13A569" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4457.6" systemVersion="13A584" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="4">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3682.6"/>
     </dependencies>
@@ -77,7 +77,6 @@
                                     <outlet property="DescriptionLabel" destination="ZUa-Ot-gIq" id="uWR-i7-Urt"/>
                                     <outlet property="DetailsLabel" destination="JB2-R1-NhY" id="O59-Oc-7Bg"/>
                                     <outlet property="DirectionImage" destination="g4Y-jW-AxA" id="2bH-sf-Dmc"/>
-                                    <segue destination="BSK-6d-T1E" kind="push" identifier="Old" id="GhB-rm-xUj"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -95,12 +94,14 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="HistorySearchBar" destination="9aE-jU-fIt" id="IrD-7x-5eG"/>
+                        <outlet property="AddItemButton" destination="Xwz-cI-o0f" id="pTa-Xb-Dbi"/>
+                        <outlet property="SearchBar" destination="9aE-jU-fIt" id="oiA-cV-xIO"/>
+                        <segue destination="BSK-6d-T1E" kind="push" identifier="Old" id="Trj-gV-ECa"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JSF-2s-fUl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="909" y="-1274"/>
+            <point key="canvasLocation" x="1033" y="-1274"/>
         </scene>
         <!--Transaction Controller - New Transaction-->
         <scene sceneID="UXt-mj-dQ7">
@@ -354,14 +355,14 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="AddPersonButton" destination="syd-Bk-pht" id="lQf-yD-SYr"/>
-                        <outlet property="PeopleSearchBar" destination="HDm-Fj-aXd" id="7ZO-Ky-Opg"/>
+                        <outlet property="AddItemButton" destination="syd-Bk-pht" id="h7U-9j-DNG"/>
+                        <outlet property="SearchBar" destination="HDm-Fj-aXd" id="SET-Gn-XGe"/>
                         <segue destination="4GH-c2-GpN" kind="push" identifier="Old" id="B60-PX-sPa"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j7t-Fn-CY2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1000" y="-406"/>
+            <point key="canvasLocation" x="1033" y="-406"/>
         </scene>
         <!--Person Controller - New Person-->
         <scene sceneID="0IX-4F-iTM">
@@ -500,7 +501,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xbu-Lw-Nu2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1500" y="-406"/>
+            <point key="canvasLocation" x="1533" y="-406"/>
         </scene>
         <!--Categories Controller - Categories-->
         <scene sceneID="1Ia-oF-Q52">
@@ -555,14 +556,14 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="AddCategoryButton" destination="5jh-gY-1nB" id="O2K-cE-rFQ"/>
-                        <outlet property="CategoriesSearchBar" destination="x9N-eT-uzY" id="6FV-PH-v0m"/>
+                        <outlet property="AddItemButton" destination="5jh-gY-1nB" id="luX-Wg-OZh"/>
+                        <outlet property="SearchBar" destination="x9N-eT-uzY" id="GMI-En-lTW"/>
                         <segue destination="497-zb-7PW" kind="push" identifier="Old" id="aOV-Yo-5Sg"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UQ2-YK-bjp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1085" y="631"/>
+            <point key="canvasLocation" x="1033" y="631"/>
         </scene>
         <!--Category Controller - New Category-->
         <scene sceneID="lug-Wx-AH3">
@@ -700,7 +701,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cvt-dw-X3a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1553" y="632"/>
+            <point key="canvasLocation" x="1533" y="631"/>
         </scene>
         <!--Navigation Controller - Me-->
         <scene sceneID="FDt-j6-5kf">
@@ -781,8 +782,8 @@
         <class className="CategoriesController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CategoriesController.h"/>
             <relationships>
-                <relationship kind="outlet" name="AddCategoryButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="CategoriesSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="AddItemButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="SearchBar" candidateClass="UISearchBar"/>
             </relationships>
         </class>
         <class className="CategoryController" superclassName="UIViewController">
@@ -808,8 +809,8 @@
         <class className="PeopleController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PeopleController.h"/>
             <relationships>
-                <relationship kind="outlet" name="AddPersonButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="PeopleSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="AddItemButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="SearchBar" candidateClass="UISearchBar"/>
             </relationships>
         </class>
         <class className="PersonController" superclassName="UIViewController">
@@ -850,7 +851,8 @@
         <class className="TransactionsController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TransactionsController.h"/>
             <relationships>
-                <relationship kind="outlet" name="HistorySearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="AddItemButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="SearchBar" candidateClass="UISearchBar"/>
             </relationships>
         </class>
     </classes>
@@ -860,9 +862,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="I3D-hn-7pM"/>
         <segue reference="Ws8-Wn-wLW"/>
         <segue reference="2mc-nb-RLL"/>
-        <segue reference="I3D-hn-7pM"/>
         <segue reference="B60-PX-sPa"/>
         <segue reference="aOV-Yo-5Sg"/>
     </inferredMetricsTieBreakers>
