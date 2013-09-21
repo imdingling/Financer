@@ -154,9 +154,6 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="DataModel\" />
-    <Folder Include="People\" />
-    <Folder Include="Categories\" />
-    <Folder Include="Transactions\" />
     <Folder Include="Resources\Icons\" />
     <Folder Include="TableViewSources\" />
     <Folder Include="TableViewControllers\" />

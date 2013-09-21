@@ -3,16 +3,17 @@ using MonoTouch.UIKit;
 using System.Collections.Generic;
 using System.Linq;
 using MonoTouch.Foundation;
+using System.Collections;
 
 namespace Financer
 {
-    public abstract class TableViewSourceBase<T1, T2> : UITableViewSource
+    public abstract class TableViewSourceBase : UITableViewSource
     {
-        protected Dictionary<T1, T2[]> items;
+        protected Dictionary<string, object[]> items;
         public string HeaderText { get; set; }
-        public Action<T2> Callback { get; set; }
+        public Action<object> Callback { get; set; }
 
-        protected TableViewSourceBase(Dictionary<T1, T2[]> items) : base()
+        protected TableViewSourceBase(Dictionary<string, object[]> items) : base()
         {
             this.Update (items);
         }
@@ -34,13 +35,8 @@ namespace Financer
             } else if (this.items.Count < 2) {
                 return null;
             } else {
-                return this.GetKeyString (this.items.ElementAt (section).Key);
+                return this.items.ElementAt (section).Key;
             }
-        }
-
-        protected virtual string GetKeyString(T1 key)
-        {
-            return key.ToString ();
         }
 
         public override string TitleForFooter (UITableView tableView, int section)
@@ -48,7 +44,7 @@ namespace Financer
             return null;
         }
 
-        public void Update(Dictionary<T1, T2[]> items)
+        public void Update(Dictionary<string, object[]> items)
         {
             this.items = items;
         }
@@ -57,7 +53,7 @@ namespace Financer
         {
             tableView.DeselectRow (indexPath, true);
             if (this.Callback != null) {
-                var item = this.items.ItemForIndexPath<T1, T2>(indexPath);
+                var item = this.items.ItemForIndexPath<string, object>(indexPath);
                 this.Callback (item);
             }
         }

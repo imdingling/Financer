@@ -34,19 +34,19 @@ namespace Financer
         }
         #endregion
         #region IEnumerable<*>
-        public static Dictionary<DateTime, Transaction[]> ToTransactionDictionary (this IEnumerable<Transaction> transactions)
+        public static Dictionary<string, object[]> ToTransactionDictionary (this IEnumerable<Transaction> transactions)
         {
-            return transactions.GroupBy (transaction => transaction.Date.Date).OrderByDescending (gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.OrderByDescending(t => t.Date).ToArray ());
+            return transactions.GroupBy (transaction => transaction.Date.Date).OrderByDescending (gr => gr.Key).ToDictionary (gr => gr.Key.ToString("d"), gr => gr.OrderByDescending(t => t.Date).Cast<object>().ToArray());
         }
 
-        public static Dictionary<char, Category[]> GetCategoriesDictionary(this IEnumerable<Category> categories)
+        public static Dictionary<string, object[]> GetCategoriesDictionary(this IEnumerable<Category> categories)
         {
-            return categories.GroupBy (category => category.Name[0]).OrderBy(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.OrderBy(c => c.Name).ToArray());
+            return categories.GroupBy (category => category.Name.Substring(0,1)).OrderBy(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.OrderBy(c => c.Name).Cast<object>().ToArray());
         }
 
-        public static Dictionary<char, Person[]> GetPeopleDictionary (this IEnumerable<Person> people)
+        public static Dictionary<string, object[]> GetPeopleDictionary (this IEnumerable<Person> people)
         {
-            return people.GroupBy (person => person.Name [0]).OrderBy(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.OrderBy(p => p.Name).ToArray ());
+            return people.GroupBy (person => person.Name.Substring(0,1)).OrderBy(gr => gr.Key).ToDictionary (gr => gr.Key, gr => gr.OrderBy(p => p.Name).Cast<object>().ToArray ());
         }
         #endregion
         #region int

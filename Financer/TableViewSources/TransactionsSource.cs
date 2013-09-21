@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace Financer
 {
-    public class TransactionsSource : TableViewSourceBase<DateTime, Transaction>
+    public class TransactionsSource : TableViewSourceBase
     {
-        public TransactionsSource (Dictionary<DateTime, Transaction[]> items) : base(items)
+        public TransactionsSource (Dictionary<string, object[]> items) : base(items)
         {
         }
 
@@ -21,14 +21,9 @@ namespace Financer
             }
       
             var transaction = this.items.ItemForIndexPath (indexPath);
-            cell.UpdateCell (transaction);
+            cell.UpdateCell (transaction as Transaction);
       
             return cell;
-        }
-
-        protected override string GetKeyString (DateTime key)
-        {
-            return key.ToString ("d");
         }
     }
 }

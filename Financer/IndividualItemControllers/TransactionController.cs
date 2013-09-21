@@ -277,7 +277,7 @@ namespace Financer
                 if (categoriesController != null) {
                     categoriesController.SelectionCallback = (category) => {
                         categoriesController.NavigationController.PopViewControllerAnimated(true);
-                        this.CurrentCategory = category;
+                        this.CurrentCategory = category as Category;
                     };
                 }
                 break;
@@ -292,7 +292,7 @@ namespace Financer
                 if (peopleController != null) {
                     peopleController.SelectionCallback = (person) => {
                         peopleController.NavigationController.PopViewControllerAnimated(true);
-                        this.CurrentPerson = person;
+                        this.CurrentPerson = person as Person;
                     };
                 }
                 break;

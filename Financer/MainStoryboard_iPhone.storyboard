@@ -94,8 +94,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="AddItemButton" destination="Xwz-cI-o0f" id="pTa-Xb-Dbi"/>
-                        <outlet property="SearchBar" destination="9aE-jU-fIt" id="oiA-cV-xIO"/>
+                        <outlet property="AddTransactionButton" destination="Xwz-cI-o0f" id="b4M-b4-UnD"/>
+                        <outlet property="TransactionSearchBar" destination="9aE-jU-fIt" id="Wpg-Xw-hoN"/>
                         <segue destination="BSK-6d-T1E" kind="push" identifier="Old" id="Trj-gV-ECa"/>
                     </connections>
                 </tableViewController>
@@ -355,8 +355,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="AddItemButton" destination="syd-Bk-pht" id="h7U-9j-DNG"/>
-                        <outlet property="SearchBar" destination="HDm-Fj-aXd" id="SET-Gn-XGe"/>
+                        <outlet property="AddPersonButton" destination="syd-Bk-pht" id="mrs-Bs-ADA"/>
+                        <outlet property="PersonSearchBar" destination="HDm-Fj-aXd" id="qg2-IN-IC5"/>
                         <segue destination="4GH-c2-GpN" kind="push" identifier="Old" id="B60-PX-sPa"/>
                     </connections>
                 </tableViewController>
@@ -456,7 +456,6 @@
                                             <outlet property="DescriptionLabel" destination="0zw-VN-0B7" id="TOx-0d-ngp"/>
                                             <outlet property="DetailsLabel" destination="Kir-a7-azS" id="Gze-lH-hGS"/>
                                             <outlet property="DirectionImage" destination="LvX-Ad-S0E" id="r40-WH-QoS"/>
-                                            <segue destination="BSK-6d-T1E" kind="push" identifier="Old" id="Bsz-0F-XZV"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -497,6 +496,7 @@
                         <outlet property="PhotoImageView" destination="s8o-3s-Xm2" id="6ol-uA-Nie"/>
                         <outlet property="RightBarButton" destination="Xsl-Ij-KSN" id="WSF-t0-plI"/>
                         <outlet property="TransactionsTableView" destination="j20-kS-IDH" id="OqV-NF-dXL"/>
+                        <segue destination="BSK-6d-T1E" kind="push" identifier="Old" id="ZEs-3c-bDB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xbu-Lw-Nu2" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -551,13 +551,13 @@
                     <navigationItem key="navigationItem" title="Categories" id="hAk-bf-CYq">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="5jh-gY-1nB">
                             <connections>
-                                <segue destination="497-zb-7PW" kind="push" identifier="New" id="TTz-fg-rSp"/>
+                                <segue destination="497-zb-7PW" kind="push" identifier="New" id="cJu-dt-jG0"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="AddItemButton" destination="5jh-gY-1nB" id="luX-Wg-OZh"/>
-                        <outlet property="SearchBar" destination="x9N-eT-uzY" id="GMI-En-lTW"/>
+                        <outlet property="AddCategoryButton" destination="5jh-gY-1nB" id="TBK-30-QVG"/>
+                        <outlet property="CategorySearchBar" destination="x9N-eT-uzY" id="Rrf-fs-rLr"/>
                         <segue destination="497-zb-7PW" kind="push" identifier="Old" id="aOV-Yo-5Sg"/>
                     </connections>
                 </tableViewController>
@@ -669,7 +669,6 @@
                                             <outlet property="DescriptionLabel" destination="go3-A9-Q2r" id="1zL-da-vep"/>
                                             <outlet property="DetailsLabel" destination="nK1-SG-MUh" id="elw-kc-44f"/>
                                             <outlet property="DirectionImage" destination="phD-mG-3Yf" id="1bj-fW-84G"/>
-                                            <segue destination="BSK-6d-T1E" kind="push" identifier="Old" id="YlM-av-BPI"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -697,6 +696,7 @@
                         <outlet property="NameTextField" destination="iG0-9J-miI" id="nEh-Qx-fAc"/>
                         <outlet property="RightBarButton" destination="VQy-hR-mO2" id="EDN-FN-GV4"/>
                         <outlet property="TransactionsTableView" destination="43r-hP-rce" id="RXf-Ww-AVm"/>
+                        <segue destination="BSK-6d-T1E" kind="push" identifier="Old" id="eJU-EL-wS4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cvt-dw-X3a" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -782,8 +782,8 @@
         <class className="CategoriesController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CategoriesController.h"/>
             <relationships>
-                <relationship kind="outlet" name="AddItemButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="SearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="AddCategoryButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="CategorySearchBar" candidateClass="UISearchBar"/>
             </relationships>
         </class>
         <class className="CategoryController" superclassName="UIViewController">
@@ -809,8 +809,8 @@
         <class className="PeopleController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PeopleController.h"/>
             <relationships>
-                <relationship kind="outlet" name="AddItemButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="SearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="AddPersonButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="PersonSearchBar" candidateClass="UISearchBar"/>
             </relationships>
         </class>
         <class className="PersonController" superclassName="UIViewController">
@@ -851,8 +851,8 @@
         <class className="TransactionsController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TransactionsController.h"/>
             <relationships>
-                <relationship kind="outlet" name="AddItemButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="SearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="AddTransactionButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="TransactionSearchBar" candidateClass="UISearchBar"/>
             </relationships>
         </class>
     </classes>
@@ -862,10 +862,10 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="I3D-hn-7pM"/>
-        <segue reference="Ws8-Wn-wLW"/>
-        <segue reference="2mc-nb-RLL"/>
         <segue reference="B60-PX-sPa"/>
-        <segue reference="aOV-Yo-5Sg"/>
+        <segue reference="Gg9-37-oov"/>
+        <segue reference="EI6-Pu-Rz4"/>
+        <segue reference="cJu-dt-jG0"/>
+        <segue reference="eJU-EL-wS4"/>
     </inferredMetricsTieBreakers>
 </document>

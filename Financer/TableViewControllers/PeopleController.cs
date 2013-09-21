@@ -7,9 +7,21 @@ using System.Collections.Generic;
 
 namespace Financer
 {
-    public partial class PeopleController : TableViewControllerBase<char, Person>
+    public partial class PeopleController : TableViewControllerBase
     {
-        protected override void InitializeTableViewSource (Dictionary<char, Person[]> items)
+        protected override UIBarButtonItem AddItemButton {
+            get {
+                return this.AddPersonButton;
+            }
+        }
+
+        protected override UISearchBar SearchBar {
+            get {
+                return this.PersonSearchBar;
+            }
+        }
+
+        protected override void InitializeTableViewSource (Dictionary<string, object[]> items)
         {
             this.tableViewSource = new PeopleSource (items);
         }
@@ -24,10 +36,10 @@ namespace Financer
 
         public override void PrepareForSegue (UIStoryboardSegue segue, NSObject sender)
         {
-            if (segue.Identifier == OldSegueIdentifier) {
+            if (segue.Identifier == App.OldSegueIdentifier) {
                 var controller = segue.DestinationViewController as PersonController;
                 if (controller != null) {
-                    controller.Person = this.SelectedItem;
+                    controller.Person = this.SelectedItem as Person;
                 }
             }
 

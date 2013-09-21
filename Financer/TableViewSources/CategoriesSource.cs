@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace Financer
 {
-    public class CategoriesSource : TableViewSourceBase<char, Category>
+    public class CategoriesSource : TableViewSourceBase
     {
-        public CategoriesSource (Dictionary<char, Category[]> items) : base (items)
+        public CategoriesSource (Dictionary<string, object[]> items) : base (items)
         {
         }
 
@@ -21,7 +21,7 @@ namespace Financer
             }
 
             var category = this.items.ItemForIndexPath(indexPath);
-            cell.UpdateCell (category);
+            cell.UpdateCell (category as Category);
 
             return cell;
         }

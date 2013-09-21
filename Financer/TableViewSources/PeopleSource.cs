@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace Financer
 {
-    public class PeopleSource : TableViewSourceBase<char, Person>
+    public class PeopleSource : TableViewSourceBase
     {
-        public PeopleSource (Dictionary<char, Person[]> items) : base(items)
+        public PeopleSource (Dictionary<string, object[]> items) : base(items)
         {
         }
 
@@ -21,7 +21,7 @@ namespace Financer
             }
 
             var person = this.items.ItemForIndexPath(indexPath);
-            cell.UpdateCell (person);
+            cell.UpdateCell (person as Person);
 
             return cell;
         }

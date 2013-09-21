@@ -16,7 +16,8 @@ namespace Financer
         private UIActionSheet deleteActionSheet;
         private UIActionSheet pickPhotoActionSheet;
         private TransactionsSource transactionsSource;
-        private Dictionary<DateTime, Transaction[]> transactions;
+        private Dictionary<string, object[]> transactions;
+        private Transaction selectedTransaction;
 
         private bool isEditing;
         private bool IsEditing {
@@ -78,10 +79,10 @@ namespace Financer
 
         public override void PrepareForSegue (UIStoryboardSegue segue, NSObject sender)
         {
-            if (segue.Identifier == "Old") {
+            if (segue.Identifier == App.OldSegueIdentifier) {
                 var controller = segue.DestinationViewController as TransactionController;
                 if (controller != null) {
-                    controller.Transaction = this.transactions.ItemForIndexPath (this.TransactionsTableView.IndexPathForSelectedRow);
+                    controller.Transaction = this.selectedTransaction;
                 }
             }
 
@@ -119,6 +120,10 @@ namespace Financer
 
             this.transactions = FinancerModel.GetTransactions ().Where (t => t.ReceiverId == this.Person.Id || t.SenderId == this.Person.Id).ToTransactionDictionary ();
             this.transactionsSource = new TransactionsSource (this.transactions);
+            this.transactionsSource.Callback = (transaction) => {
+                this.selectedTransaction = transaction as Transaction;
+                this.PerformSegue(App.OldSegueIdentifier, this);
+            };
             this.TransactionsTableView.Source = this.transactionsSource;
         }
 

@@ -6,7 +6,6 @@
 //
 using MonoTouch.Foundation;
 using System.CodeDom.Compiler;
-using MonoTouch.UIKit;
 
 namespace Financer
 {
@@ -14,21 +13,21 @@ namespace Financer
 	partial class PeopleController
 	{
 		[Outlet]
-		protected override UIBarButtonItem AddItemButton { get; set; }
+		MonoTouch.UIKit.UIBarButtonItem AddPersonButton { get; set; }
 
 		[Outlet]
-        protected override UISearchBar SearchBar { get; set; }
+		MonoTouch.UIKit.UISearchBar PersonSearchBar { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-            if (SearchBar != null) {
-                SearchBar.Dispose ();
-                SearchBar = null;
+			if (AddPersonButton != null) {
+				AddPersonButton.Dispose ();
+				AddPersonButton = null;
 			}
 
-            if (AddItemButton != null) {
-                AddItemButton.Dispose ();
-                AddItemButton = null;
+			if (PersonSearchBar != null) {
+				PersonSearchBar.Dispose ();
+				PersonSearchBar = null;
 			}
 		}
 	}

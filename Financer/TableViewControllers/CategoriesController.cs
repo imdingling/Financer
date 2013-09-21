@@ -7,9 +7,21 @@ using System.Linq;
 
 namespace Financer
 {
-    public partial class CategoriesController : TableViewControllerBase<char, Category>
+    public partial class CategoriesController : TableViewControllerBase
     {
-        protected override void InitializeTableViewSource (Dictionary<char, Category[]> items)
+        protected override UIBarButtonItem AddItemButton {
+            get {
+                return this.AddCategoryButton;               
+            }
+        }
+
+        protected override UISearchBar SearchBar {
+            get {
+                return this.CategorySearchBar;
+            }
+        }
+
+        protected override void InitializeTableViewSource (Dictionary<string, object[]> items)
         {
             this.tableViewSource = new CategoriesSource (items);
         }
@@ -24,10 +36,10 @@ namespace Financer
 
         public override void PrepareForSegue (UIStoryboardSegue segue, NSObject sender)
         {
-            if (segue.Identifier == OldSegueIdentifier) {
+            if (segue.Identifier == App.OldSegueIdentifier) {
                 var controller = segue.DestinationViewController as CategoryController;
                 if (controller != null) {
-                    controller.Category = this.SelectedItem;
+                    controller.Category = this.SelectedItem as Category;
                 }
             }
 

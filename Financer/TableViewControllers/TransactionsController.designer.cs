@@ -13,21 +13,21 @@ namespace Financer
 	partial class TransactionsController
 	{
 		[Outlet]
-		protected override MonoTouch.UIKit.UIBarButtonItem AddItemButton { get; set; }
+		MonoTouch.UIKit.UIBarButtonItem AddTransactionButton { get; set; }
 
 		[Outlet]
-		protected override MonoTouch.UIKit.UISearchBar SearchBar { get; set; }
+		MonoTouch.UIKit.UISearchBar TransactionSearchBar { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (SearchBar != null) {
-				SearchBar.Dispose ();
-				SearchBar = null;
+			if (AddTransactionButton != null) {
+				AddTransactionButton.Dispose ();
+				AddTransactionButton = null;
 			}
 
-			if (AddItemButton != null) {
-				AddItemButton.Dispose ();
-				AddItemButton = null;
+			if (TransactionSearchBar != null) {
+				TransactionSearchBar.Dispose ();
+				TransactionSearchBar = null;
 			}
 		}
 	}

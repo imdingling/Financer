@@ -6,19 +6,17 @@ using System.Drawing;
 
 namespace Financer
 {
-    public abstract class TableViewControllerBase<T1, T2> : UITableViewController
+    public abstract class TableViewControllerBase : UITableViewController
     {
-        protected const string OldSegueIdentifier = "Old";
-
         private LazyInvoker lazySearchTimer;
-        protected TableViewSourceBase<T1, T2> tableViewSource;
+        protected TableViewSourceBase tableViewSource;
 
-        protected abstract UISearchBar SearchBar { get; set; }
+        protected abstract UISearchBar SearchBar { get; }
 
-        protected abstract UIBarButtonItem AddItemButton { get; set; }
+        protected abstract UIBarButtonItem AddItemButton { get; }
 
-        private Dictionary<T1, T2[]> filteredItems;
-        public Dictionary<T1, T2[]> FilteredItems { 
+        private Dictionary<string, object[]> filteredItems;
+        public Dictionary<string, object[]> FilteredItems { 
             get {
                 return this.filteredItems;
             }
@@ -33,8 +31,8 @@ namespace Financer
             }
         }
 
-        private Action<T2> selectionCallback;
-        public Action<T2> SelectionCallback { 
+        private Action<object> selectionCallback;
+        public Action<object> SelectionCallback { 
             get {
                 return this.selectionCallback;
             }
@@ -46,8 +44,8 @@ namespace Financer
             }
         }
 
-        private T2 selectedItem;
-        protected T2 SelectedItem { 
+        private object selectedItem;
+        protected object SelectedItem { 
             get {
                 return this.selectedItem;
             }
@@ -57,7 +55,7 @@ namespace Financer
                     if (this.SelectionCallback != null) {
                         this.SelectionCallback (value);
                     } else {
-                        this.PerformSegue (OldSegueIdentifier, this);
+                        this.PerformSegue (App.OldSegueIdentifier, this);
                     }
                 }
             }
@@ -76,7 +74,7 @@ namespace Financer
 
         private void Initialize()
         {
-            this.FilteredItems = new Dictionary<T1, T2[]> ();
+            this.FilteredItems = new Dictionary<string, object[]> ();
             this.InitializeTableViewSource (this.FilteredItems);
             this.tableViewSource.Callback = (item) => {
                 this.SelectedItem = item;
@@ -84,7 +82,7 @@ namespace Financer
             this.lazySearchTimer = new LazyInvoker (0.5, this.UpdateFilteredItems);
         }
 
-        protected abstract void InitializeTableViewSource (Dictionary<T1, T2[]> items);
+        protected abstract void InitializeTableViewSource (Dictionary<string, object[]> items);
 
         public override void DidReceiveMemoryWarning ()
         {

@@ -13,21 +13,21 @@ namespace Financer
 	partial class CategoriesController
 	{
 		[Outlet]
-		protected override MonoTouch.UIKit.UIBarButtonItem AddItemButton { get; set; }
+		MonoTouch.UIKit.UIBarButtonItem AddCategoryButton { get; set; }
 
 		[Outlet]
-		protected override MonoTouch.UIKit.UISearchBar SearchBar { get; set; }
+		MonoTouch.UIKit.UISearchBar CategorySearchBar { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-            if (SearchBar != null) {
-                SearchBar.Dispose ();
-                SearchBar = null;
+			if (AddCategoryButton != null) {
+				AddCategoryButton.Dispose ();
+				AddCategoryButton = null;
 			}
 
-            if (AddItemButton != null) {
-                AddItemButton.Dispose ();
-                AddItemButton = null;
+			if (CategorySearchBar != null) {
+				CategorySearchBar.Dispose ();
+				CategorySearchBar = null;
 			}
 		}
 	}

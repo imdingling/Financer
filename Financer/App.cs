@@ -7,6 +7,8 @@ namespace Financer
 {
     public static class App
     {
+        public const string OldSegueIdentifier = "Old";
+
         public static void Initialize ()
         {
             InitDummyTransactions ();
